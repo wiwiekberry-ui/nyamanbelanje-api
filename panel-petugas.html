@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Petugas — Nyaman BELANJE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--green-700:#1a7a3a;--green-600:#22963e;--green-500:#2DB553;--green-100:#E8F8EC;--green-50:#F4FCF6;--blue-700:#0D3B8C;--blue-600:#1554A8;--blue-100:#E3EEFB;--blue-50:#F0F6FE;--teal-600:#0F766E;--teal-700:#0D645E;--teal-100:#CCFBF1;--teal-50:#F0FDFA;--slate-900:#0F172A;--slate-700:#334155;--slate-500:#64748B;--slate-300:#CBD5E1;--slate-200:#E2E8F0;--slate-100:#F1F5F9;--slate-50:#F8FAFC;--white:#FFFFFF;--red-500:#DC2626;--red-100:#FEE2E2;--amber-500:#D97706;--amber-100:#FEF3C7;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--shadow-sm:0 1px 2px rgba(15,23,42,0.04);--shadow-md:0 4px 12px rgba(15,23,42,0.06);--shadow-lg:0 8px 24px rgba(15,23,42,0.08);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--slate-50);color:var(--slate-900);min-height:100vh;}
+
+        /* ===== LOGIN SCREEN ===== */
+        .login-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--teal-600) 0%,var(--blue-700) 100%);transition:opacity 0.4s ease;}
+        .login-overlay.hidden{opacity:0;pointer-events:none;}
+        .login-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:420px;max-width:95%;overflow:hidden;}
+        .login-header{background:linear-gradient(135deg,var(--teal-600),var(--blue-700));color:white;padding:32px 32px 28px;text-align:center;}
+        .login-header .login-logo{width:56px;height:56px;background:white;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+        .login-header h2{font-size:20px;font-weight:800;margin-bottom:4px;}
+        .login-header p{font-size:12px;opacity:0.8;}
+        .login-body{padding:28px 32px 32px;}
+        .login-body .form-group{margin-bottom:18px;}
+        .login-body label{display:block;font-size:11px;font-weight:700;color:var(--slate-500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+        .login-body .input-wrap{position:relative;}
+        .login-body .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--slate-300);pointer-events:none;}
+        .login-body input[type="text"],.login-body input[type="password"]{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--slate-50);}
+        .login-body input:focus{border-color:var(--teal-600);box-shadow:0 0 0 3px rgba(15,118,110,0.1);background:white;}
+        .login-body input.error{border-color:var(--red-500);box-shadow:0 0 0 3px rgba(220,38,38,0.1);}
+        .login-error{font-size:12px;color:var(--red-500);margin-top:8px;display:none;align-items:center;gap:6px;}
+        .login-error.show{display:flex;}
+        .login-error svg{flex-shrink:0;}
+        .btn-login{width:100%;padding:12px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--teal-600);color:white;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-login:hover{background:var(--teal-700);}
+        .btn-login:disabled{opacity:0.6;cursor:not-allowed;}
+        .login-footer{text-align:center;margin-top:16px;font-size:11px;color:var(--slate-500);}
+        .login-footer span{font-weight:700;color:var(--teal-600);}
+
+        /* ===== TOPNAV ===== */
+        .topnav{background:linear-gradient(135deg,var(--teal-600) 0%,var(--blue-700) 100%);color:white;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+        .topnav-left{display:flex;align-items:center;gap:12px;}
+        .topnav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:white;}
+        .topnav-logo{width:32px;height:32px;background:white;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .topnav-title{font-size:14px;font-weight:700;}
+        .topnav-title span{color:var(--teal-100);}
+        .topnav-divider{width:1px;height:24px;background:rgba(255,255,255,0.2);}
+        .topnav-breadcrumb{font-size:12px;opacity:0.7;}
+        .back-link{display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,0.7);text-decoration:none;padding:4px 10px;border-radius:var(--radius-sm);transition:all 0.2s;}
+        .back-link:hover{background:rgba(255,255,255,0.1);color:white;}
+        .topnav-right{display:flex;align-items:center;gap:12px;}
+        .petugas-info{font-size:12px;text-align:right;line-height:1.4;}
+        .petugas-info strong{display:block;font-weight:700;}
+        .petugas-info span{opacity:0.7;font-size:11px;}
+        .btn-logout{padding:6px 14px;border-radius:var(--radius-sm);font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,0.4);background:transparent;color:white;font-family:inherit;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
+        .btn-logout:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.6);}
+
+        /* ===== MAIN CONTENT ===== */
+        .main{max-width:1100px;margin:0 auto;padding:28px 24px 60px;}
+        .header-card{background:linear-gradient(135deg,var(--teal-600),var(--blue-700));color:white;border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;}
+        .header-left h1{font-size:22px;font-weight:800;margin-bottom:4px;}
+        .header-left p{font-size:13px;opacity:0.8;}
+        .header-stats{display:flex;gap:20px;}
+        .stat-box{text-align:center;padding:12px 20px;background:rgba(255,255,255,0.12);border-radius:var(--radius-md);min-width:90px;}
+        .stat-num{font-size:24px;font-weight:800;}
+        .stat-label{font-size:10px;font-weight:600;opacity:0.8;margin-top:2px;}
+        .filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+        .filter-bar input{padding:10px 14px;border:1.5px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;outline:none;flex:1;min-width:200px;transition:border-color 0.2s;}
+        .filter-bar input:focus{border-color:var(--teal-600);box-shadow:0 0 0 3px rgba(15,118,110,0.1);}
+        .filter-bar select{padding:10px 14px;border:1.5px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;outline:none;background:white;}
+        .btn-refresh{padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;border:none;background:var(--teal-600);color:white;font-family:inherit;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+        .btn-refresh:hover{background:var(--teal-700);}
+        .table-card{background:var(--white);border:1px solid var(--slate-100);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px;}
+        .table-header{padding:16px 20px;border-bottom:1px solid var(--slate-100);display:flex;justify-content:space-between;align-items:center;}
+        .table-header h3{font-size:15px;font-weight:800;}
+        .table-wrap{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;font-size:13px;}
+        th{background:var(--slate-50);padding:12px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--slate-500);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--slate-100);}
+        td{padding:12px 16px;border-bottom:1px solid var(--slate-50);vertical-align:middle;}
+        tr:hover td{background:var(--teal-50);}
+        .file-name{font-weight:600;color:var(--teal-600);cursor:pointer;text-decoration:underline;}
+        .file-name:hover{color:var(--teal-700);}
+        .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;}
+        .badge-diajukan{background:var(--amber-100);color:var(--amber-500);}
+        .badge-diverifikasi{background:var(--blue-100);color:var(--blue-600);}
+        .badge-disetujui{background:var(--green-100);color:var(--green-700);}
+        .badge-selesai{background:var(--green-100);color:var(--green-700);}
+        .badge-ditolak{background:var(--red-100);color:var(--red-500);}
+        .btn-view{padding:6px 12px;border-radius:var(--radius-sm);font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--teal-600);background:white;color:var(--teal-600);font-family:inherit;transition:all 0.2s;}
+        .btn-view:hover{background:var(--teal-600);color:white;}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--slate-500);}
+        .empty-state svg{width:48px;height:48px;color:var(--slate-300);margin-bottom:16px;}
+        .empty-state h3{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--slate-700);}
+        .empty-state p{font-size:13px;}
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;}
+        .modal-overlay.show{display:flex;}
+        .modal{background:white;border-radius:var(--radius-lg);max-width:700px;width:95%;max-height:85vh;overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;}
+        .modal-header{padding:20px 24px;border-bottom:1px solid var(--slate-100);display:flex;justify-content:space-between;align-items:center;}
+        .modal-header h3{font-size:16px;font-weight:800;}
+        .modal-close{background:none;border:none;cursor:pointer;padding:4px;color:var(--slate-500);transition:color 0.2s;}
+        .modal-close:hover{color:var(--slate-900);}
+        .modal-body{padding:24px;overflow-y:auto;flex:1;}
+        .modal-footer{padding:14px 24px;border-top:1px solid var(--slate-100);display:flex;gap:8px;justify-content:flex-end;}
+        .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+        .detail-item{padding:10px 14px;background:var(--slate-50);border-radius:var(--radius-sm);}
+        .detail-label{font-size:10px;font-weight:600;color:var(--slate-500);text-transform:uppercase;letter-spacing:0.5px;}
+        .detail-value{font-size:13px;font-weight:600;margin-top:2px;}
+        .detail-value.full{grid-column:1/-1;}
+        .doc-list{margin-top:16px;}
+        .doc-list h4{font-size:13px;font-weight:700;margin-bottom:10px;}
+        .doc-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--slate-100);border-radius:var(--radius-md);margin-bottom:8px;transition:all 0.2s;}
+        .doc-item:hover{border-color:var(--teal-400);background:var(--teal-50);}
+        .doc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .doc-icon.pdf{background:#FEE2E2;color:#DC2626;}
+        .doc-icon.img{background:#DBEAFE;color:#2563EB;}
+        .doc-icon.txt{background:var(--slate-100);color:var(--slate-600);}
+        .doc-info{flex:1;}
+        .doc-name{font-size:13px;font-weight:600;}
+        .doc-meta{font-size:11px;color:var(--slate-500);}
+        .doc-actions{display:flex;gap:6px;}
+        .viewer-frame{width:100%;height:400px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);background:white;}
+        .toast{position:fixed;top:70px;right:24px;background:var(--white);border:1px solid var(--slate-100);border-radius:var(--radius-md);padding:14px 18px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;z-index:200;transform:translateX(120%);transition:transform 0.3s ease;max-width:340px;}
+        .toast.show{transform:translateX(0);}
+        .toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .toast-icon.success{background:var(--green-100);color:var(--green-600);}
+        .toast-icon.error{background:var(--red-100);color:var(--red-500);}
+        .toast-msg{font-size:12px;font-weight:600;}
+
+        /* ===== DATA PEDAGANG (PETUGAS) ===== */
+        .trader-card{background:var(--white);border:1px solid var(--slate-100);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;}
+        .trader-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;}
+        .trader-header h3{font-size:15px;font-weight:800;margin-bottom:4px;}
+        .trader-header p{font-size:12px;color:var(--slate-500);line-height:1.5;}
+        .trader-form{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:18px;background:var(--slate-50);border:1px solid var(--slate-100);border-radius:var(--radius-md);}
+        .trader-form .form-group{display:flex;flex-direction:column;gap:6px;}
+        .trader-form .form-group.full{grid-column:1/-1;}
+        .trader-form label{font-size:11px;font-weight:700;color:var(--slate-700);}
+        .trader-form label .required{color:var(--red-500);}
+        .trader-form input,.trader-form select,.trader-form textarea{width:100%;padding:10px 12px;border:1.5px solid var(--slate-300);border-radius:var(--radius-sm);font:inherit;font-size:12px;color:var(--slate-900);background:var(--white);outline:none;}
+        .trader-form textarea{min-height:70px;resize:vertical;}
+        .trader-form input:focus,.trader-form select:focus,.trader-form textarea:focus{border-color:var(--teal-600);box-shadow:0 0 0 3px rgba(15,118,110,.1);}
+        .trader-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;}
+        .btn-save{padding:10px 16px;border:0;border-radius:var(--radius-sm);background:var(--teal-600);color:white;font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+        .btn-save:hover{background:var(--teal-700);}
+        .btn-reset{padding:10px 16px;border:1px solid var(--slate-300);border-radius:var(--radius-sm);background:white;color:var(--slate-700);font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+        .btn-reset:hover{background:var(--slate-100);}
+        .trader-table-wrap{overflow-x:auto;margin-top:18px;}
+        .trader-table{min-width:920px;}
+        .trader-empty{text-align:center;padding:28px 16px;color:var(--slate-500);font-size:12px;}
+        .trader-actions-cell{display:flex;gap:6px;}
+        .btn-delete{padding:5px 9px;border:1px solid #FECACA;border-radius:6px;background:var(--red-100);color:var(--red-500);font:inherit;font-size:10px;font-weight:700;cursor:pointer;}
+        .btn-delete:hover{background:#FCA5A5;color:#991B1B;}
+        .privacy-note{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:10px;line-height:1.5;color:var(--slate-500);}
+        .privacy-note svg{flex-shrink:0;color:var(--teal-600);margin-top:1px;}
+
+        @media(max-width:768px){.header-card{flex-direction:column;gap:16px;text-align:center;}.header-stats{justify-content:center;}.detail-grid{grid-template-columns:1fr;}.filter-bar{flex-direction:column;}.filter-bar input,.filter-bar select{min-width:auto;width:100%;}.topnav-right{flex-direction:column;align-items:flex-end;gap:6px;}.trader-form{grid-template-columns:1fr;}.trader-form .form-group.full{grid-column:auto;}.trader-header{flex-direction:column;}}
+    </style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">
+                <svg viewBox="0 0 40 40" fill="none" width="40" height="40">
+                    <rect width="40" height="40" rx="6" fill="#0F766E"/>
+                    <path d="M20 6 L28 12 L28 24 L20 30 L12 24 L12 12 Z" fill="#C9A834" stroke="#fff" stroke-width="0.8"/>
+                    <circle cx="20" cy="18" r="5" fill="#fff" opacity="0.9"/>
+                    <text x="20" y="20" text-anchor="middle" font-size="5" fill="#0F766E" font-weight="700">BET</text>
+                </svg>
+            </div>
+            <h2>Panel Petugas</h2>
+            <p>Masukkan Nomor Induk Petugas dan PIN untuk mengakses sistem</p>
+        </div>
+        <div class="login-body">
+            <div class="form-group">
+                <label>Nomor Induk Petugas (NIP)</label>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <input type="text" id="nipInput" placeholder="Contoh: 198501012010011001" maxlength="20" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>PIN Akses</label>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    <input type="password" id="pinInput" placeholder="Masukkan 4-6 digit PIN" maxlength="6">
+                </div>
+            </div>
+            <div class="login-error" id="loginError">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="loginErrorMsg">NIP atau PIN salah. Silakan coba lagi.</span>
+            </div>
+            <button class="btn-login" id="btnLogin" onclick="handleLogin()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Masuk
+            </button>
+            <div class="login-footer">
+                Dinas Perindustrian dan Perdagangan <span>Kab. Belitung Timur</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOPNAV (hidden until login) -->
+<nav class="topnav" id="topnav" style="display:none;">
+    <div class="topnav-left">
+        <a class="back-link" href="dashboard-nyaman-belanje.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Dashboard</a>
+        <div class="topnav-divider"></div>
+        <a class="topnav-brand" href="dashboard-nyaman-belanje.html"><div class="topnav-logo"><svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="6" fill="#0F766E"/><path d="M20 6 L28 12 L28 24 L20 30 L12 24 L12 12 Z" fill="#C9A834" stroke="#fff" stroke-width="0.8"/><circle cx="20" cy="18" r="5" fill="#fff" opacity="0.9"/><text x="20" y="20" text-anchor="middle" font-size="5" fill="#0F766E" font-weight="700">BET</text></svg></div><div class="topnav-title">Nyaman <span>BELANJE</span></div></a>
+        <div class="topnav-divider"></div>
+        <span class="topnav-breadcrumb">Panel Petugas — Dokumen Pengajuan</span>
+    </div>
+    <div class="topnav-right">
+        <div class="petugas-info">
+            <strong id="petugasName">Petugas</strong>
+            <span id="petugasNip">NIP: -</span>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Keluar
+        </button>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT (hidden until login) -->
+<div class="main" id="mainContent" style="display:none;">
+    <div class="header-card">
+        <div class="header-left">
+            <h1>Panel Petugas — Dokumen Pengajuan</h1>
+            <p>Lihat, preview, dan download dokumen yang diunggah oleh pemohon layanan Nyaman BELANJE</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total File</div></div>
+            <div class="stat-box"><div class="stat-num" id="statServices">0</div><div class="stat-label">Layanan</div></div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Cari nama file atau nomor pengajuan..." oninput="filterFiles()">
+        <select id="filterService" onchange="filterFiles()">
+            <option value="">Semua Layanan</option>
+            <option value="operasi-pasar">Operasi Pasar / Pasar Murah</option>
+            <option value="pengaduan">Pengaduan & Saran</option>
+            <option value="sewa-kios">Sewa Kios / Petak Pasar</option>
+            <option value="e-retribusi">E-Retribusi Pasar</option>
+            <option value="test">Test</option>
+        </select>
+        <button class="btn-refresh" onclick="loadFiles()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Refresh</button>
+    </div>
+
+    <div class="table-card">
+        <div class="table-header">
+            <h3>Daftar Dokumen</h3>
+            <span style="font-size:12px;color:var(--slate-500);" id="fileCount">Memuat...</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama File</th>
+                        <th>Layanan</th>
+                        <th>Nomor Pengajuan</th>
+                        <th>Ukuran</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="fileTableBody">
+                    <tr><td colspan="7" class="empty-state" style="padding:40px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <h3>Memuat data...</h3>
+                        <p>Mengambil daftar dokumen dari Kilat Storage</p>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== FORM DATA PEDAGANG (KHUSUS PETUGAS) ===== -->
+    <div class="trader-card">
+        <div class="trader-header">
+            <div>
+                <h3>Data Pedagang</h3>
+                <p>Input dan kelola data pedagang. Bagian ini hanya dapat diakses oleh petugas yang telah login.</p>
+            </div>
+            <span class="badge badge-disetujui">Khusus Petugas</span>
+        </div>
+
+        <form class="trader-form" id="traderForm" onsubmit="saveTrader(event)">
+            <div class="form-group">
+                <label>Nama Pedagang <span class="required">*</span></label>
+                <input type="text" id="trNama" placeholder="Nama sesuai KTP" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label>NIK <span class="required">*</span></label>
+                <input type="text" id="trNik" placeholder="16 digit NIK" maxlength="16" inputmode="numeric">
+            </div>
+            <div class="form-group">
+                <label>No. Telepon <span class="required">*</span></label>
+                <input type="tel" id="trTelp" placeholder="08xxxxxxxxxx" maxlength="15">
+            </div>
+            <div class="form-group">
+                <label>Nama Usaha</label>
+                <input type="text" id="trUsaha" placeholder="Contoh: Warung Makmur" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label>Jenis Usaha <span class="required">*</span></label>
+                <select id="trJenis">
+                    <option value="">— Pilih —</option>
+                    <option>Sembako</option>
+                    <option>Sayur &amp; Buah</option>
+                    <option>Ikan &amp; Seafood</option>
+                    <option>Daging</option>
+                    <option>Pakaian</option>
+                    <option>Kelontong</option>
+                    <option>Lainnya</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Pasar <span class="required">*</span></label>
+                <select id="trPasar">
+                    <option value="">— Pilih Pasar —</option>
+                    <option>Pasar Lipat Kajang Manggar</option>
+                    <option>Pasar Gantung</option>
+                    <option>Pasar Sukamandi</option>
+                    <option>Pasar Kelapa Kampit</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kios / Petak</label>
+                <input type="text" id="trKios" placeholder="Contoh: A-01" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label>Status Pedagang <span class="required">*</span></label>
+                <select id="trStatus">
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Nonaktif</option>
+                </select>
+            </div>
+            <div class="form-group full">
+                <label>Alamat</label>
+                <textarea id="trAlamat" placeholder="Alamat lengkap pedagang" maxlength="300"></textarea>
+            </div>
+            <div class="form-group full">
+                <label>Catatan</label>
+                <textarea id="trCatatan" placeholder="Catatan tambahan (opsional)" maxlength="300"></textarea>
+            </div>
+            <div class="form-group full trader-actions">
+                <button type="button" class="btn-reset" onclick="resetTraderForm()">Bersihkan</button>
+                <button type="submit" class="btn-save">Simpan Data Pedagang</button>
+            </div>
+        </form>
+
+        <div class="privacy-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Data pedagang bersifat rahasia. Pastikan NIK dan data pribadi tidak dibagikan ke luar sistem. Halaman ini dilindungi login NIP &amp; PIN petugas.</span>
+        </div>
+
+        <div class="trader-table-wrap">
+            <table class="trader-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Pedagang</th>
+                        <th>NIK</th>
+                        <th>Telepon</th>
+                        <th>Usaha</th>
+                        <th>Pasar</th>
+                        <th>Kios</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="traderTableBody"></tbody>
+            </table>
+            <div class="trader-empty" id="traderEmpty">Belum ada data pedagang. Gunakan form di atas untuk menambahkan.</div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Detail Pengajuan & Dokumen</h3>
+            <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <div class="detail-grid" id="detailGrid"></div>
+            <div class="doc-list" id="docList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL VIEWER -->
+<div class="modal-overlay" id="viewerModal" onclick="if(event.target===this)closeViewer()">
+    <div class="modal" style="max-width:800px;">
+        <div class="modal-header">
+            <h3 id="viewerTitle">Preview Dokumen</h3>
+            <button class="modal-close" onclick="closeViewer()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="modal-body" style="padding:0;">
+            <iframe id="viewerFrame" class="viewer-frame" src="about:blank"></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-view" id="viewerDownloadBtn" onclick="downloadFile()">Unduh</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-icon success" id="toastIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="toast-msg" id="toastMsg"></div></div>
+
+<script>
+/* ===== DATA PETUGAS ===== */
+/* Format: NIP -> { name, pin, role } */
+/* Ganti PIN di bawah sesuai kebutuhan. Untuk produksi, pindahkan ke backend database. */
+const PETUGAS_DB = {
+  '198501012010011001': { name: 'Ahmad Sudirman',   pin: '1234', role: 'Kepala Seksi Perdagangan' },
+  '198703152012012002': { name: 'Siti Rahmawati',    pin: '5678', role: 'Staff E-Retribusi' },
+  '199005202015013003': { name: 'Budi Hartono',      pin: '1122', role: 'Staff Sewa Kios' },
+  '199208012018014004': { name: 'Dewi Lestari',      pin: '3344', role: 'Staff Operasi Pasar' },
+  '198806102011015005': { name: 'Rudi Gunawan',      pin: '9900', role: 'Admin Panel Petugas' },
+  /* Tambah petugas baru di sini:
+  'NIP_BARU': { name: 'Nama Petugas', pin: 'PIN', role: 'Jabatan' }, */
+};
+
+const KILAT_API_URL = 'http://localhost:3000';
+let allFiles = [];
+let currentViewerKey = '';
+let currentPetugas = null;
+
+/* ===== LOGIN ===== */
+function checkLogin() {
+  const saved = sessionStorage.getItem('petugas_session');
+  if (saved) {
+    try {
+      currentPetugas = JSON.parse(saved);
+      showDashboard();
+      return true;
+    } catch(e) { sessionStorage.removeItem('petugas_session'); }
+  }
+  return false;
+}
+
+function handleLogin() {
+  const nip = document.getElementById('nipInput').value.trim();
+  const pin = document.getElementById('pinInput').value.trim();
+  const errEl = document.getElementById('loginError');
+  const errMsg = document.getElementById('loginErrorMsg');
+  const nipInput = document.getElementById('nipInput');
+  const pinInput = document.getElementById('pinInput');
+
+  nipInput.classList.remove('error');
+  pinInput.classList.remove('error');
+
+  if (!nip) {
+    nipInput.classList.add('error');
+    errMsg.textContent = 'Nomor Induk Petugas wajib diisi.';
+    errEl.classList.add('show');
+    nipInput.focus();
+    return;
+  }
+  if (!pin) {
+    pinInput.classList.add('error');
+    errMsg.textContent = 'PIN wajib diisi.';
+    errEl.classList.add('show');
+    pinInput.focus();
+    return;
+  }
+
+  const petugas = PETUGAS_DB[nip];
+  if (!petugas || petugas.pin !== pin) {
+    errMsg.textContent = 'NIP atau PIN salah. Silakan coba lagi.';
+    errEl.classList.add('show');
+    nipInput.classList.add('error');
+    pinInput.classList.add('error');
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+    return;
+  }
+
+  errEl.classList.remove('show');
+  currentPetugas = { nip: nip, name: petugas.name, role: petugas.role };
+  sessionStorage.setItem('petugas_session', JSON.stringify(currentPetugas));
+  showDashboard();
+}
+
+function handleLogout() {
+  currentPetugas = null;
+  sessionStorage.removeItem('petugas_session');
+  document.getElementById('topnav').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('loginOverlay').classList.remove('hidden');
+  document.getElementById('nipInput').value = '';
+  document.getElementById('pinInput').value = '';
+  document.getElementById('nipInput').focus();
+}
+
+function showDashboard() {
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('topnav').style.display = '';
+  document.getElementById('mainContent').style.display = '';
+  document.getElementById('petugasName').textContent = currentPetugas.name;
+  document.getElementById('petugasNip').textContent = 'NIP: ' + currentPetugas.nip;
+  loadFiles();
+  renderTraders();
+}
+
+/* Enter key login */
+document.getElementById('pinInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('nipInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('pinInput').focus();
+});
+
+/* ===== FILE MANAGEMENT ===== */
+async function loadFiles() {
+  try {
+    document.getElementById('fileCount').textContent = 'Memuat...';
+    const response = await fetch(KILAT_API_URL + '/api/storage/list?prefix=');
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.error);
+
+    allFiles = data.files.filter(function(f) { return f.key && !f.key.endsWith('/'); });
+    renderFiles(allFiles);
+    updateStats();
+  } catch (err) {
+    showToast('error', 'Gagal memuat daftar file: ' + err.message);
+    document.getElementById('fileTableBody').innerHTML = '<tr><td colspan="7" class="empty-state" style="padding:40px;"><h3>Gagal memuat data</h3><p>Pastikan server backend berjalan di localhost:3000</p></td></tr>';
+  }
+}
+
+function renderFiles(files) {
+  var tbody = document.getElementById('fileTableBody');
+  if (files.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state" style="padding:40px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><h3>Belum ada dokumen</h3><p>Dokumen akan muncul setelah pemohon mengirim pengajuan</p></td></tr>';
+    document.getElementById('fileCount').textContent = '0 file';
+    return;
+  }
+  var html = '';
+  files.forEach(function(file, i) {
+    var parts = file.key.split('/');
+    var service = parts[0] || '-';
+    var recordId = parts.length > 2 ? parts[1] : '-';
+    var fileName = parts[parts.length - 1];
+    var size = formatSize(file.size);
+    var date = file.lastModified ? new Date(file.lastModified).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+    var encKey = encodeURIComponent(file.key);
+    var safeName = escapeHtml(fileName);
+    html += '<tr>';
+    html += '<td>' + (i + 1) + '</td>';
+    html += '<td><span class="file-name" onclick="viewFile(\'' + encKey + '\',\'' + safeName + '\')">' + safeName + '</span></td>';
+    html += '<td><span class="badge badge-diverifikasi">' + escapeHtml(service) + '</span></td>';
+    html += '<td>' + escapeHtml(recordId) + '</td>';
+    html += '<td>' + size + '</td>';
+    html += '<td>' + date + '</td>';
+    html += '<td><button class="btn-view" onclick="viewFile(\'' + encKey + '\',\'' + safeName + '\')">Lihat</button></td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+  document.getElementById('fileCount').textContent = files.length + ' file';
+}
+
+function filterFiles() {
+  var search = document.getElementById('searchInput').value.toLowerCase();
+  var service = document.getElementById('filterService').value;
+  var filtered = allFiles;
+  if (service) filtered = filtered.filter(function(f) { return f.key.startsWith(service + '/'); });
+  if (search) filtered = filtered.filter(function(f) { return f.key.toLowerCase().indexOf(search) !== -1; });
+  renderFiles(filtered);
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allFiles.length;
+  var svcSet = {};
+  allFiles.forEach(function(f) { svcSet[f.key.split('/')[0]] = true; });
+  document.getElementById('statServices').textContent = Object.keys(svcSet).length;
+}
+
+function viewFile(encodedKey, fileName) {
+  var key = decodeURIComponent(encodedKey);
+  currentViewerKey = key;
+  document.getElementById('viewerTitle').textContent = fileName;
+  var ext = fileName.split('.').pop().toLowerCase();
+  var viewUrl = KILAT_API_URL + '/api/storage/view?key=' + encodeURIComponent(key);
+  if (['jpg', 'jpeg', 'png', 'gif', 'pdf'].indexOf(ext) !== -1) {
+    document.getElementById('viewerFrame').src = viewUrl;
+  } else {
+    document.getElementById('viewerFrame').src = 'about:blank';
+    showToast('error', 'Format file ini tidak dapat dipreview. Gunakan tombol unduh.');
+  }
+  document.getElementById('viewerModal').classList.add('show');
+}
+
+function downloadFile() {
+  if (!currentViewerKey) return;
+  window.open(KILAT_API_URL + '/api/storage/view?key=' + encodeURIComponent(currentViewerKey), '_blank');
+}
+
+function closeModal() { document.getElementById('detailModal').classList.remove('show'); }
+function closeViewer() { document.getElementById('viewerModal').classList.remove('show'); document.getElementById('viewerFrame').src = 'about:blank'; currentViewerKey = ''; }
+
+function formatSize(b) {
+  if (!b) return '-';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return Math.round(b / 1024 * 10) / 10 + ' KB';
+  return Math.round(b / 1048576 * 10) / 10 + ' MB';
+}
+
+function escapeHtml(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+function showToast(t, m) {
+  var x = document.getElementById('toast');
+  var i = document.getElementById('toastIcon');
+  i.className = 'toast-icon ' + t;
+  i.innerHTML = t === 'success'
+    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  document.getElementById('toastMsg').textContent = m;
+  x.classList.add('show');
+  setTimeout(function() { x.classList.remove('show'); }, 4000);
+}
+
+/* ===== DATA PEDAGANG (PETUGAS ONLY) ===== */
+var TRADER_KEY = 'nyamanbelanje_pedagang';
+
+function loadTraders() {
+  try { return JSON.parse(localStorage.getItem(TRADER_KEY)) || []; }
+  catch (e) { return []; }
+}
+
+function saveTradersToStorage(list) {
+  localStorage.setItem(TRADER_KEY, JSON.stringify(list));
+}
+
+function renderTraders() {
+  var list = loadTraders();
+  var tbody = document.getElementById('traderTableBody');
+  var empty = document.getElementById('traderEmpty');
+  if (!tbody) return;
+  if (list.length === 0) {
+    tbody.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  var html = '';
+  list.forEach(function(t, i) {
+    var statusBadge = t.status === 'aktif'
+      ? '<span class="badge badge-disetujui">Aktif</span>'
+      : '<span class="badge badge-ditolak">Nonaktif</span>';
+    html += '<tr>';
+    html += '<td>' + (i + 1) + '</td>';
+    html += '<td>' + escapeHtml(t.nama) + '</td>';
+    html += '<td>' + escapeHtml(t.nik) + '</td>';
+    html += '<td>' + escapeHtml(t.telp || '-') + '</td>';
+    html += '<td>' + escapeHtml(t.usaha || '-') + ' (' + escapeHtml(t.jenis || '-') + ')</td>';
+    html += '<td>' + escapeHtml(t.pasar || '-') + '</td>';
+    html += '<td>' + escapeHtml(t.kios || '-') + '</td>';
+    html += '<td>' + statusBadge + '</td>';
+    html += '<td><div class="trader-actions-cell"><button class="btn-delete" onclick="deleteTrader(' + i + ')">Hapus</button></div></td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+function saveTrader(e) {
+  e.preventDefault();
+  if (!currentPetugas) { showToast('error', 'Sesi berakhir. Silakan login ulang.'); return; }
+  var nama = document.getElementById('trNama').value.trim();
+  var nik = document.getElementById('trNik').value.trim();
+  var telp = document.getElementById('trTelp').value.trim();
+  var usaha = document.getElementById('trUsaha').value.trim();
+  var jenis = document.getElementById('trJenis').value;
+  var pasar = document.getElementById('trPasar').value;
+  var kios = document.getElementById('trKios').value.trim().toUpperCase();
+  var status = document.getElementById('trStatus').value;
+  var alamat = document.getElementById('trAlamat').value.trim();
+  var catatan = document.getElementById('trCatatan').value.trim();
+
+  if (!nama) { showToast('error', 'Nama pedagang wajib diisi'); return; }
+  if (!/^\d{16}$/.test(nik)) { showToast('error', 'NIK harus 16 digit angka'); return; }
+  if (!/^0\d{8,13}$/.test(telp)) { showToast('error', 'Nomor telepon tidak valid (contoh: 08xxxxxxxxxx)'); return; }
+  if (!jenis) { showToast('error', 'Jenis usaha wajib dipilih'); return; }
+  if (!pasar) { showToast('error', 'Pasar wajib dipilih'); return; }
+
+  var list = loadTraders();
+  var duplikat = list.some(function(t) { return t.nik === nik; });
+  if (duplikat) { showToast('error', 'NIK sudah terdaftar sebagai pedagang'); return; }
+
+  list.push({
+    nama: nama, nik: nik, telp: telp, usaha: usaha, jenis: jenis,
+    pasar: pasar, kios: kios, status: status, alamat: alamat, catatan: catatan,
+    dibuatOleh: currentPetugas.name, dibuatNip: currentPetugas.nip,
+    waktu: new Date().toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  });
+  saveTradersToStorage(list);
+  renderTraders();
+  resetTraderForm();
+  showToast('success', 'Data pedagang "' + nama + '" berhasil disimpan');
+}
+
+function deleteTrader(i) {
+  var list = loadTraders();
+  if (!list[i]) return;
+  var nama = list[i].nama;
+  list.splice(i, 1);
+  saveTradersToStorage(list);
+  renderTraders();
+  showToast('success', 'Data pedagang "' + nama + '" dihapus');
+}
+
+function resetTraderForm() {
+  document.getElementById('traderForm').reset();
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load', function() {
+  if (!checkLogin()) {
+    document.getElementById('nipInput').focus();
+  } else {
+    renderTraders();
+  }
+});
+</script>
+</body>
+</html>

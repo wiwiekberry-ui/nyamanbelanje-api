@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Retribusi Pasar — Nyaman BELANJE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--green-700:#1a7a3a;--green-600:#22963e;--green-500:#2DB553;--green-400:#4CC76E;--green-100:#E8F8EC;--green-50:#F4FCF6;--blue-700:#0D3B8C;--blue-600:#1554A8;--blue-500:#2068C0;--blue-100:#E3EEFB;--blue-50:#F0F6FE;--slate-900:#0F172A;--slate-700:#334155;--slate-500:#64748B;--slate-300:#CBD5E1;--slate-100:#F1F5F9;--slate-50:#F8FAFC;--white:#FFFFFF;--red-500:#DC2626;--red-100:#FEE2E2;--amber-500:#D97706;--amber-100:#FEF3C7;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--shadow-sm:0 1px 2px rgba(15,23,42,0.04);--shadow-md:0 4px 12px rgba(15,23,42,0.06);--shadow-lg:0 8px 24px rgba(15,23,42,0.08);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--slate-50);color:var(--slate-900);min-height:100vh;}
+
+        /* LOGIN */
+        .login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--green-700) 0%,var(--blue-700) 100%);z-index:9999;display:flex;align-items:center;justify-content:center;}
+        .login-overlay.hidden{display:none;}
+        .login-card{background:white;border-radius:var(--radius-lg);padding:36px;width:100%;max-width:400px;box-shadow:var(--shadow-lg);}
+        .login-card h2{font-size:20px;font-weight:800;text-align:center;margin-bottom:4px;}
+        .login-card .login-sub{text-align:center;font-size:12px;color:var(--slate-500);margin-bottom:24px;}
+        .login-card .login-logo{text-align:center;margin-bottom:20px;}
+        .login-card .login-logo svg{width:48px;height:48px;}
+        .login-tabs{display:flex;gap:4px;background:var(--slate-100);border-radius:var(--radius-sm);padding:4px;margin-bottom:20px;}
+        .login-tab{flex:1;padding:8px;text-align:center;font-size:12px;font-weight:700;border-radius:6px;cursor:pointer;transition:all 0.2s;border:none;background:transparent;color:var(--slate-500);font-family:inherit;}
+        .login-tab.active{background:white;color:var(--slate-900);box-shadow:var(--shadow-sm);}
+        .login-error{background:var(--red-100);border:1px solid #FECACA;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--red-500);margin-bottom:16px;display:none;}
+        .login-error.show{display:block;}
+        .login-form{display:flex;flex-direction:column;gap:14px;}
+        .login-form label{font-size:12px;font-weight:600;color:var(--slate-700);}
+        .login-form input{width:100%;padding:10px 14px;border:1.5px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;outline:none;transition:border-color 0.2s;}
+        .login-form input:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(45,181,83,0.1);}
+        .login-btn{padding:11px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;background:var(--green-600);color:white;margin-top:4px;}
+        .login-btn:hover{background:var(--green-700);transform:translateY(-1px);}
+        .login-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+        .login-btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.6s linear infinite;display:none;}
+        .login-divider{text-align:center;font-size:11px;color:var(--slate-500);margin:16px 0;position:relative;}
+        .login-divider::before,.login-divider::after{content:'';position:absolute;top:50%;width:calc(50% - 40px);height:1px;background:var(--slate-200);}
+        .login-divider::before{left:0;}.login-divider::after{right:0;}
+        .login-anon{width:100%;padding:10px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--slate-200);background:white;color:var(--slate-700);font-family:inherit;transition:all 0.2s;}
+        .login-anon:hover{border-color:var(--green-500);background:var(--green-50);}
+        .login-demo-badge{display:inline-block;background:var(--amber-100);color:var(--amber-500);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;}
+
+        /* NAV */
+        .topnav{background:linear-gradient(135deg,var(--green-700) 0%,var(--blue-700) 100%);color:white;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+        .topnav-left{display:flex;align-items:center;gap:12px;}
+        .topnav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:white;}
+        .topnav-logo{width:32px;height:32px;background:white;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .topnav-logo svg{width:26px;height:26px;}
+        .topnav-title{font-size:14px;font-weight:700;letter-spacing:0.3px;}
+        .topnav-title span{color:var(--green-400);}
+        .topnav-divider{width:1px;height:24px;background:rgba(255,255,255,0.2);}
+        .topnav-breadcrumb{font-size:12px;opacity:0.7;}
+        .topnav-right{display:flex;align-items:center;gap:12px;}
+        .topnav-user{display:flex;align-items:center;gap:8px;font-size:12px;opacity:0.85;}
+        .topnav-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:5px 10px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;cursor:pointer;transition:background 0.2s;font-family:inherit;}
+        .topnav-logout:hover{background:rgba(255,255,255,0.25);}
+        .back-link{display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,0.7);text-decoration:none;padding:4px 10px;border-radius:var(--radius-sm);transition:all 0.2s;}
+        .back-link:hover{background:rgba(255,255,255,0.1);color:white;}
+
+        /* PROGRESS */
+        .progress-wrapper{background:var(--white);border-bottom:1px solid var(--slate-100);padding:20px 32px;}
+        .progress-steps{display:flex;align-items:center;justify-content:center;max-width:800px;margin:0 auto;}
+        .progress-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;}
+        .step-circle{width:40px;height:40px;border-radius:50%;background:var(--slate-100);border:2px solid var(--slate-300);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--slate-500);transition:all 0.4s ease;}
+        .step-circle svg{display:none;width:18px;height:18px;}
+        .progress-step.active .step-circle{background:var(--green-600);border-color:var(--green-600);color:white;box-shadow:0 0 0 4px rgba(45,181,83,0.15);}
+        .progress-step.done .step-circle{background:var(--green-600);border-color:var(--green-600);color:white;}
+        .progress-step.done .step-circle span{display:none;}
+        .progress-step.done .step-circle svg{display:block;}
+        .step-label{font-size:11px;font-weight:600;color:var(--slate-500);text-align:center;max-width:100px;transition:color 0.3s;}
+        .progress-step.active .step-label,.progress-step.done .step-label{color:var(--green-700);}
+        .progress-line{flex:1;height:2px;background:var(--slate-200);margin:0 -4px;margin-bottom:26px;z-index:1;}
+        .progress-line.active{background:var(--green-500);}
+
+        /* MAIN */
+        .main-content{max-width:720px;margin:0 auto;padding:28px 24px 60px;}
+        .section{display:none;}
+        .section.active{display:block;animation:fadeSlideIn 0.35s ease;}
+        @keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .section-card{background:var(--white);border:1px solid var(--slate-100);border-radius:var(--radius-lg);padding:28px;margin-bottom:16px;}
+        .section-title{font-size:18px;font-weight:800;margin-bottom:4px;}
+        .section-desc{font-size:13px;color:var(--slate-500);margin-bottom:24px;line-height:1.5;}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+        .form-group{display:flex;flex-direction:column;gap:6px;}
+        .form-group.full{grid-column:1/-1;}
+        .form-label{font-size:12px;font-weight:600;color:var(--slate-700);}
+        .form-label .required{color:var(--red-500);}
+        .form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1.5px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--slate-900);background:var(--white);transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
+        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(45,181,83,0.1);}
+        .form-textarea{min-height:80px;resize:vertical;}
+
+        /* UPLOAD */
+        .upload-zone{border:2px dashed var(--slate-300);border-radius:var(--radius-md);padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--slate-50);position:relative;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+        .upload-zone:hover{border-color:var(--green-500);background:var(--green-50);}
+        .upload-zone.uploaded{border-color:var(--green-500);background:var(--green-50);border-style:solid;}
+        .upload-zone.uploading{border-color:var(--blue-500);background:var(--blue-50);border-style:solid;}
+        .upload-icon{width:48px;height:48px;border-radius:50%;background:var(--blue-100);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:var(--blue-600);transition:all 0.3s;}
+        .upload-zone.uploaded .upload-icon{background:var(--green-100);color:var(--green-600);}
+        .upload-zone.uploading .upload-icon{background:var(--blue-100);color:var(--blue-600);}
+        .upload-text{font-size:13px;font-weight:600;margin-bottom:4px;}
+        .upload-subtext{font-size:11px;color:var(--slate-500);}
+        .upload-remove{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--red-500);color:white;border:none;cursor:none;display:none;align-items:center;justify-content:center;font-size:12px;line-height:1;transition:transform 0.15s;}
+        .upload-remove:hover{transform:scale(1.15);}
+        .upload-zone.uploaded .upload-remove{display:flex;cursor:pointer;}
+        .upload-input{display:none;}
+        .upload-error{font-size:11px;color:var(--red-500);font-weight:600;margin-top:6px;display:none;}
+        .upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;}
+        .upload-progress{width:100%;height:4px;background:var(--slate-200);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
+        .upload-progress-bar{height:100%;background:var(--blue-500);border-radius:2px;width:0;transition:width 0.3s;}
+
+        /* VERIFY */
+        .verify-panel{text-align:center;padding:40px 20px;}
+        .verify-spinner{width:56px;height:56px;border:4px solid var(--slate-100);border-top-color:var(--green-500);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;}
+        .verify-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+        .verify-text{font-size:13px;color:var(--slate-500);}
+        .verify-checks{margin-top:24px;display:flex;flex-direction:column;gap:10px;max-width:360px;margin-left:auto;margin-right:auto;}
+        .verify-check{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--slate-50);border-radius:var(--radius-sm);font-size:12.5px;font-weight:500;}
+        .verify-check.done{background:var(--green-50);}
+        .verify-check-icon{width:22px;height:22px;border-radius:50%;background:var(--slate-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .verify-check.done .verify-check-icon{background:var(--green-500);color:white;}
+        .verify-check-icon svg{width:12px;height:12px;}
+        .reject-banner{background:var(--red-100);border:1px solid #FECACA;border-radius:var(--radius-md);padding:16px 20px;display:none;align-items:flex-start;gap:12px;margin-bottom:16px;}
+        .reject-banner.show{display:flex;}
+        .reject-icon{width:28px;height:28px;border-radius:50%;background:var(--red-500);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;}
+        .reject-content{flex:1;}
+        .reject-title{font-size:13px;font-weight:700;color:var(--red-500);}
+        .reject-text{font-size:12px;color:var(--slate-700);margin-top:3px;}
+
+        /* STALL */
+        .stall-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+        .stall-item{display:flex;align-items:center;gap:14px;padding:16px;border:1.5px solid var(--slate-100);border-radius:var(--radius-md);cursor:pointer;transition:all 0.2s;}
+        .stall-item:hover{border-color:var(--green-400);background:var(--green-50);}
+        .stall-item.selected{border-color:var(--green-500);background:var(--green-50);box-shadow:0 0 0 3px rgba(45,181,83,0.1);}
+        .stall-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--slate-300);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+        .stall-item.selected .stall-radio{border-color:var(--green-500);background:var(--green-500);}
+        .stall-item.selected .stall-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:white;}
+        .stall-info{flex:1;}
+        .stall-name{font-size:13px;font-weight:700;}
+        .stall-detail{font-size:11.5px;color:var(--slate-500);margin-top:2px;}
+        .stall-amount{font-size:14px;font-weight:800;color:var(--green-700);white-space:nowrap;}
+
+        /* QR */
+        .qr-scan-area{width:200px;height:200px;margin:20px auto;border:3px solid var(--green-500);border-radius:var(--radius-lg);position:relative;overflow:hidden;background:var(--white);}
+        .qr-corner{position:absolute;width:24px;height:24px;border:3px solid var(--green-600);}
+        .tl{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:4px 0 0 0;}
+        .tr{top:-1px;right:-1px;border-left:none;border-bottom:none;border-radius:0 4px 0 0;}
+        .bl{bottom:-1px;left:-1px;border-right:none;border-top:none;border-radius:0 0 0 4px;}
+        .br{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 4px 0;}
+        .qr-scan-line{position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,var(--green-500),transparent);animation:scanMove 2s ease-in-out infinite;}
+        @keyframes scanMove{0%,100%{top:20px;}50%{top:calc(100% - 20px);}}
+        .qr-scan-text{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:var(--green-700);}
+
+        /* PAYMENT */
+        .payment-summary{background:var(--slate-50);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;}
+        .payment-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;}
+        .payment-row.total{border-top:2px solid var(--slate-200);margin-top:8px;padding-top:12px;font-weight:800;font-size:16px;}
+        .payment-row.total .pay-value{color:var(--green-700);}
+        .payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .payment-method{padding:16px;border:2px solid var(--slate-100);border-radius:var(--radius-md);cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+        .payment-method:hover{border-color:var(--blue-400);}
+        .payment-method.selected{border-color:var(--blue-600);background:var(--blue-50);}
+        .payment-method-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;}
+        .payment-method-name{font-size:12px;font-weight:700;}
+        .payment-method-desc{font-size:10px;color:var(--slate-500);}
+
+        /* RECEIPT */
+        .receipt{border:2px solid var(--green-500);border-radius:var(--radius-lg);overflow:hidden;}
+        .receipt-header{background:linear-gradient(135deg,var(--green-700),var(--blue-700));color:white;padding:20px;text-align:center;}
+        .receipt-header h3{font-size:15px;font-weight:800;margin-bottom:2px;}
+        .receipt-header p{font-size:11px;opacity:0.7;}
+        .receipt-body{padding:20px;}
+        .receipt-row{display:flex;justify-content:space-between;padding:7px 0;font-size:12.5px;border-bottom:1px dotted var(--slate-100);}
+        .receipt-row:last-child{border-bottom:none;}
+        .receipt-label{color:var(--slate-500);}
+        .receipt-value{font-weight:600;}
+        .receipt-footer{padding:14px 20px;background:var(--green-50);text-align:center;font-size:11px;color:var(--green-700);font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;}
+        .receipt-stamp{width:64px;height:64px;border:3px solid var(--green-500);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:16px auto 0;transform:rotate(-12deg);font-size:11px;font-weight:800;color:var(--green-600);line-height:1.1;text-align:center;}
+
+        /* BUTTONS */
+        .btn-row{display:flex;justify-content:space-between;margin-top:24px;gap:12px;}
+        .btn{padding:11px 24px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;display:flex;align-items:center;gap:6px;font-family:inherit;}
+        .btn-primary{background:var(--green-600);color:white;}
+        .btn-primary:hover{background:var(--green-700);transform:translateY(-1px);}
+        .btn-secondary{background:var(--slate-50);color:var(--slate-700);border:1px solid var(--slate-200);}
+        .btn-secondary:hover{background:var(--slate-100);}
+        .btn-blue{background:var(--blue-600);color:white;}
+        .btn-blue:hover{background:var(--blue-700);}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;}
+
+        /* TOAST */
+        .toast{position:fixed;top:70px;right:24px;background:var(--white);border:1px solid var(--slate-100);border-radius:var(--radius-md);padding:14px 18px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;z-index:200;transform:translateX(120%);transition:transform 0.3s ease;max-width:340px;}
+        .toast.show{transform:translateX(0);}
+        .toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .toast-icon.success{background:var(--green-100);color:var(--green-600);}
+        .toast-icon.error{background:var(--red-100);color:var(--red-500);}
+        .toast-msg{font-size:12px;font-weight:600;}
+
+        .modal-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;}
+        .modal-bg.show{display:flex;}
+        .modal-box{background:white;border-radius:var(--radius-lg);padding:36px;text-align:center;max-width:380px;width:90%;box-shadow:var(--shadow-lg);}
+        .modal-box h3{font-size:16px;font-weight:800;margin:16px 0 6px;}
+        .modal-box p{font-size:12px;color:var(--slate-500);margin-bottom:24px;}
+        .info-box{background:var(--blue-50);border:1px solid #BDD7F5;border-radius:var(--radius-sm);padding:12px 16px;display:flex;gap:10px;font-size:12px;color:var(--blue-700);line-height:1.5;margin-bottom:20px;}
+        .info-box svg{flex-shrink:0;margin-top:1px;}
+        @media(max-width:640px){.form-grid{grid-template-columns:1fr;}.payment-methods{grid-template-columns:1fr;}.upload-grid{grid-template-columns:1fr 1fr;}.main-content{padding:16px;}.section-card{padding:20px;}.step-label{font-size:10px;max-width:70px;}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
+    </style>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN (only shown if Firebase is active) ═══ -->
+<div class="login-overlay" id="loginOverlay" style="display:none;">
+    <div class="login-card">
+        <div class="login-logo">
+            <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="10" fill="#1a7a3a"/><path d="M24 8L34 14V28L24 34L14 28V14Z" fill="#C9A834" stroke="#fff" stroke-width="1"/><circle cx="24" cy="22" r="6" fill="#fff" opacity="0.9"/><text x="24" y="24" text-anchor="middle" font-size="6" fill="#1a7a3a" font-weight="700">BET</text></svg>
+        </div>
+        <h2>E-Retribusi Pasar</h2>
+        <div class="login-sub">Dinas Perindustrian dan Perdagangan Kab. Belitung Timur</div>
+        <div class="login-tabs">
+            <button class="login-tab active" onclick="showLoginTab('login')">Masuk</button>
+            <button class="login-tab" onclick="showLoginTab('register')">Daftar</button>
+        </div>
+        <div class="login-error" id="loginError"></div>
+        <div class="login-form" id="loginForm">
+            <div><label>Email</label><input type="email" id="loginEmail" placeholder="nama@email.com"></div>
+            <div><label>Password</label><input type="password" id="loginPass" placeholder="Masukkan password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">
+                <div class="spinner" id="loginSpinner"></div>
+                <span id="loginBtnText">Masuk</span>
+            </button>
+        </div>
+        <div class="login-form" id="registerForm" style="display:none;">
+            <div><label>Nama Lengkap</label><input type="text" id="regNama" placeholder="Nama lengkap"></div>
+            <div><label>Email</label><input type="email" id="regEmail" placeholder="nama@email.com"></div>
+            <div><label>Password</label><input type="password" id="regPass" placeholder="Minimal 6 karakter"></div>
+            <button class="login-btn" id="regBtn" onclick="doRegister()">
+                <div class="spinner" id="regSpinner"></div>
+                <span id="regBtnText">Daftar Akun</span>
+            </button>
+        </div>
+        <div class="login-divider">atau</div>
+        <button class="login-anon" onclick="doAnonymousLogin()">Masuk sebagai Tamu (Demo)</button>
+    </div>
+</div>
+
+<!-- ═══ APP NAV ═══ -->
+<nav class="topnav" id="appNav" style="display:none;">
+    <div class="topnav-left">
+        <a class="back-link" href="dashboard-nyaman-belanje.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Dashboard</a>
+        <div class="topnav-divider"></div>
+        <a class="topnav-brand" href="dashboard-nyaman-belanje.html"><div class="topnav-logo"><svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="6" fill="#1a7a3a"/><path d="M20 6 L28 12 L28 24 L20 30 L12 24 L12 12 Z" fill="#C9A834" stroke="#fff" stroke-width="0.8"/><circle cx="20" cy="18" r="5" fill="#fff" opacity="0.9"/><text x="20" y="20" text-anchor="middle" font-size="5" fill="#1a7a3a" font-weight="700">BET</text></svg></div><div class="topnav-title">Nyaman <span>BELANJE</span></div></a>
+        <div class="topnav-divider"></div>
+        <span class="topnav-breadcrumb">Layanan Pasar & Retribusi › E-Retribusi</span>
+    </div>
+    <div class="topnav-right">
+        <span id="topnavEmail" class="topnav-user"></span>
+        <button class="topnav-logout" onclick="doLogout()">Keluar</button>
+    </div>
+</nav>
+
+<!-- ═══ PROGRESS ═══ -->
+<div class="progress-wrapper" id="appProgress" style="display:none;">
+    <div class="progress-steps" id="progressSteps">
+        <div class="progress-step active" data-step="1"><div class="step-circle"><span>1</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Data Diri</div></div>
+        <div class="progress-line" id="line1"></div>
+        <div class="progress-step" data-step="2"><div class="step-circle"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Persyaratan</div></div>
+        <div class="progress-line" id="line2"></div>
+        <div class="progress-step" data-step="3"><div class="step-circle"><span>3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Verifikasi</div></div>
+        <div class="progress-line" id="line3"></div>
+        <div class="progress-step" data-step="4"><div class="step-circle"><span>4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Objek Retribusi</div></div>
+        <div class="progress-line" id="line4"></div>
+        <div class="progress-step" data-step="5"><div class="step-circle"><span>5</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Pembayaran</div></div>
+        <div class="progress-line" id="line5"></div>
+        <div class="progress-step" data-step="6"><div class="step-circle"><span>6</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Selesai</div></div>
+    </div>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main-content" id="appContent" style="display:none;">
+
+    <!-- STEP 1 -->
+    <div class="section active" id="step1">
+        <div class="section-card">
+            <div class="section-title">Data Diri Pedagang</div>
+            <div class="section-desc">Lengkapi data identitas Anda sebagai pedagang atau penyewa kios di pasar Kabupaten Belitung Timur.</div>
+            <div class="info-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Data yang Anda masukkan akan diverifikasi secara digital oleh koordinator layanan.</span></div>
+            <div class="form-grid">
+                <div class="form-group"><label class="form-label">Nama Lengkap <span class="required">*</span></label><input class="form-input" type="text" id="namaLengkap" placeholder="Masukkan nama lengkap"></div>
+                <div class="form-group"><label class="form-label">NIK (KTP) <span class="required">*</span></label><input class="form-input" type="text" id="nik" placeholder="16 digit NIK" maxlength="16"></div>
+                <div class="form-group"><label class="form-label">Nomor Telepon <span class="required">*</span></label><input class="form-input" type="tel" id="telepon" placeholder="08xxxxxxxxxx"></div>
+                <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="email" placeholder="nama@email.com"></div>
+                <div class="form-group full"><label class="form-label">Alamat Lengkap <span class="required">*</span></label><textarea class="form-textarea" id="alamat" placeholder="Alamat sesuai KTP"></textarea></div>
+                <div class="form-group"><label class="form-label">NIB (Nomor Induk Berusaha) <span class="required">*</span></label><input class="form-input" type="text" id="nib" placeholder="Masukkan NIB"></div>
+                <div class="form-group"><label class="form-label">Nama Usaha <span class="required">*</span></label><input class="form-input" type="text" id="namaUsaha" placeholder="Contoh: Warung Makmur"></div>
+                <div class="form-group"><label class="form-label">Jenis Usaha <span class="required">*</span></label><select class="form-select" id="jenisUsaha"><option value="">— Pilih —</option><option value="sembako">Sembako</option><option value="sayur">Sayur & Buah</option><option value="ikan">Ikan & Seafood</option><option value="daging">Daging</option><option value="pakaian">Pakaian</option><option value="kelontong">Kelontong</option><option value="lainnya">Lainnya</option></select></div>
+                <div class="form-group"><label class="form-label">Pasar <span class="required">*</span></label><select class="form-select" id="pasar"><option value="">— Pilih Pasar —</option><option value="pasar-lipat-kajang">Pasar Lipat Kajang Manggar</option><option value="pasar-gantung">Pasar Gantung</option><option value="pasar-sukamandi">Pasar Sukamandi</option><option value="pasar-kelapa-kampit">Pasar Kelapa Kampit</option></select></div>
+            </div>
+        </div>
+        <div class="btn-row"><div></div><button class="btn btn-primary" onclick="goToStep(2)">Lanjutkan <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="section" id="step2">
+        <div class="section-card">
+            <div class="section-title">Unggah Persyaratan Digital</div>
+            <div class="section-desc">Unggah dokumen persyaratan yang diperlukan untuk proses penarikan retribusi pasar.</div>
+            <div class="reject-banner" id="rejectBanner"><div class="reject-icon">!</div><div class="reject-content"><div class="reject-title">Dokumen Tidak Lengkap</div><div class="reject-text" id="rejectText">Beberapa dokumen belum diunggah. Silakan lengkapi persyaratan berikut.</div></div></div>
+            <div class="upload-grid">
+                <div class="form-group"><label class="form-label">KTP <span class="required">*</span></label><div class="upload-zone" id="uploadKTP" onclick="document.getElementById('fileKTP').click()"><input type="file" class="upload-input" id="fileKTP" accept=".jpg,.jpeg,.png" onchange="handleUpload(this,'uploadKTP','ktp')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadKTP','fileKTP','ktp')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><div class="upload-text">Unggah KTP</div><div class="upload-subtext">JPG, PNG (maks. 2MB)</div><div class="upload-progress" id="progressKTP"><div class="upload-progress-bar" id="barKTP"></div></div><div class="upload-error" id="errKTP"></div></div></div>
+                <div class="form-group"><label class="form-label">NIB / NIK <span class="required">*</span></label><div class="upload-zone" id="uploadNIB" onclick="document.getElementById('fileNIB').click()"><input type="file" class="upload-input" id="fileNIB" accept=".pdf,.jpg,.jpeg,.png" onchange="handleUpload(this,'uploadNIB','nib')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadNIB','fileNIB','nib')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="upload-text">Unggah NIB</div><div class="upload-subtext">PDF, JPG (maks. 2MB)</div><div class="upload-progress" id="progressNIB"><div class="upload-progress-bar" id="barNIB"></div></div><div class="upload-error" id="errNIB"></div></div></div>
+                <div class="form-group"><label class="form-label">Surat Permohonan <span class="required">*</span></label><div class="upload-zone" id="uploadSurat" onclick="document.getElementById('fileSurat').click()"><input type="file" class="upload-input" id="fileSurat" accept=".pdf,.jpg,.jpeg,.png" onchange="handleUpload(this,'uploadSurat','surat')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadSurat','fileSurat','surat')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="upload-text">Unggah Surat</div><div class="upload-subtext">PDF (maks. 2MB)</div><div class="upload-progress" id="progressSurat"><div class="upload-progress-bar" id="barSurat"></div></div><div class="upload-error" id="errSurat"></div></div></div>
+            </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-primary" onclick="startVerification()">Kirim & Verifikasi <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="section" id="step3">
+        <div class="section-card">
+            <div class="verify-panel" id="verifyPanel">
+                <div class="verify-spinner" id="verifySpinner"></div>
+                <div class="verify-title" id="verifyTitle">Verifikasi Digital Awal</div>
+                <div class="verify-text" id="verifyText">Sistem sedang memeriksa kelengkapan dokumen Anda...</div>
+                <div class="verify-checks">
+                    <div class="verify-check" id="vc1"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Memeriksa data identitas pedagang</span></div>
+                    <div class="verify-check" id="vc2"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Memverifikasi dokumen & NIB</span></div>
+                    <div class="verify-check" id="vc3"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Validasi data usaha & kios</span></div>
+                </div>
+            </div>
+            <div id="verifySuccess" style="display:none;text-align:center;padding:30px 20px;"><div style="width:64px;height:64px;border-radius:50%;background:var(--green-100);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22963e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:17px;font-weight:800;margin-bottom:4px;color:var(--green-700);">Verifikasi Berhasil</div><div style="font-size:13px;color:var(--slate-500);">Dokumen dan data Anda telah lengkap. Silakan lanjutkan ke pemilihan objek retribusi.</div></div>
+            <div id="verifyReject" style="display:none;text-align:center;padding:30px 20px;"><div style="width:64px;height:64px;border-radius:50%;background:var(--red-100);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div style="font-size:17px;font-weight:800;margin-bottom:4px;color:var(--red-500);">Dokumen Tidak Lengkap</div><div style="font-size:13px;color:var(--slate-500);margin-bottom:20px;">Silakan lengkapi dokumen yang kurang dan unggah kembali.</div><button class="btn btn-primary" onclick="goToStep(2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali ke Persyaratan</button></div>
+        </div>
+        <div class="btn-row" id="step3Btns" style="display:none;"><div></div><button class="btn btn-primary" onclick="goToStep(4)">Lanjutkan <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="section" id="step4">
+        <div class="section-card">
+            <div class="section-title">Identifikasi Objek Retribusi</div>
+            <div class="section-desc">Pilih kios atau petak pasar yang Anda sewa. Retribusi akan dihitung berdasarkan jenis dan ukuran kios Anda.</div>
+            <div style="text-align:center;margin-bottom:20px;"><div class="qr-scan-area"><div class="qr-corner tl"></div><div class="qr-corner tr"></div><div class="qr-corner bl"></div><div class="qr-corner br"></div><div class="qr-scan-line"></div><div class="qr-scan-text">Arahkan ke kode QR kios</div></div><div style="font-size:11px;color:var(--slate-500);margin-top:8px;">Scan kode QR di kios Anda, atau pilih manual di bawah</div></div>
+            <div class="stall-grid">
+                <div class="stall-item" onclick="selectStall(this,'A-01',150000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios A-01 — Blok A, Lantai 1</div><div class="stall-detail">Sembako · 4m x 3m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp150.000</div></div>
+                <div class="stall-item" onclick="selectStall(this,'A-02',125000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios A-02 — Blok A, Lantai 1</div><div class="stall-detail">Sayur & Buah · 3m x 2.5m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp125.000</div></div>
+                <div class="stall-item" onclick="selectStall(this,'B-03',175000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios B-03 — Blok B, Lantai 1</div><div class="stall-detail">Ikan & Seafood · 5m x 3m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp175.000</div></div>
+                <div class="stall-item" onclick="selectStall(this,'C-07',200000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios C-07 — Blok C, Lantai 1</div><div class="stall-detail">Daging · 5m x 4m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp200.000</div></div>
+            </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-primary" id="btnToPayment" onclick="goToStep(5)" disabled>Lanjutkan ke Pembayaran <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="section" id="step5">
+        <div class="section-card">
+            <div class="section-title">Pembayaran Digital Terintegrasi</div>
+            <div class="section-desc">Pilih metode pembayaran dan selesaikan transaksi retribusi pasar Anda.</div>
+            <div class="payment-summary">
+                <div class="payment-row"><span>Pedagang</span><span class="pay-value" id="payNama">—</span></div>
+                <div class="payment-row"><span>Kios</span><span class="pay-value" id="payKios">—</span></div>
+                <div class="payment-row"><span>Jenis Retribusi</span><span>Retribusi Sewa Kios Bulanan</span></div>
+                <div class="payment-row"><span>Periode</span><span class="pay-value" id="payPeriode">Agustus 2026</span></div>
+                <div class="payment-row"><span>Biaya Retribusi</span><span class="pay-value" id="payAmount">—</span></div>
+                <div class="payment-row"><span>Biaya Admin</span><span>Rp2.500</span></div>
+                <div class="payment-row total"><span>Total Pembayaran</span><span class="pay-value" id="payTotal">—</span></div>
+            </div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:12px;">Pilih Metode Pembayaran</div>
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPayment(this,'Bank Transfer')"><div class="payment-method-icon" style="background:var(--blue-100);">🏦</div><div class="payment-method-name">Bank Transfer</div><div class="payment-method-desc">Transfer via Bank BRI / BNI / BTN</div></div>
+                <div class="payment-method" onclick="selectPayment(this,'QRIS')"><div class="payment-method-icon" style="background:var(--green-100);">📱</div><div class="payment-method-name">QRIS</div><div class="payment-method-desc">Scan QR dari semua e-wallet</div></div>
+                <div class="payment-method" onclick="selectPayment(this,'E-Wallet')"><div class="payment-method-icon" style="background:var(--amber-100);">💳</div><div class="payment-method-name">E-Wallet</div><div class="payment-method-desc">GoPay, OVO, Dana, LinkAja</div></div>
+                <div class="payment-method" onclick="selectPayment(this,'Kas Daerah')"><div class="payment-method-icon" style="background:#EDE9FE;">🏛️</div><div class="payment-method-name">Setor Kas Daerah</div><div class="payment-method-desc">Setor langsung ke kas daerah</div></div>
+            </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-blue" id="btnBayar" onclick="processPayment()" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar Sekarang</button></div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="section" id="step6">
+        <div class="section-card">
+            <div style="text-align:center;margin-bottom:20px;"><div style="width:72px;height:72px;border-radius:50%;background:var(--green-100);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22963e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:20px;font-weight:800;color:var(--green-700);margin-bottom:4px;">Pembayaran Berhasil!</div><div style="font-size:13px;color:var(--slate-500);" id="step6Subtext">E-karcis dan bukti setor telah diterbitkan</div></div>
+            <div class="receipt">
+                <div class="receipt-header"><h3>E-KARCIS RETRIBUSI PASAR</h3><p>Dinas Perindustrian dan Perdagangan Kab. Belitung Timur</p></div>
+                <div class="receipt-body">
+                    <div class="receipt-row"><span class="receipt-label">No. Transaksi</span><span class="receipt-value" id="receiptNo">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Tanggal</span><span class="receipt-value" id="receiptDate">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Pedagang</span><span class="receipt-value" id="receiptNama">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">NIK</span><span class="receipt-value" id="receiptNIK">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Kios</span><span class="receipt-value" id="receiptKios">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Pasar</span><span class="receipt-value" id="receiptPasar">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Periode</span><span class="receipt-value" id="receiptPeriode">—</span></div>
+                    <div class="receipt-row"><span class="receipt-label">Metode Bayar</span><span class="receipt-value" id="receiptMethod">—</span></div>
+                    <div class="receipt-row" style="border-bottom:none;padding-top:12px;"><span class="receipt-label" style="font-weight:700;color:var(--slate-900);font-size:14px;">Total Dibayar</span><span class="receipt-value" style="color:var(--green-700);font-size:16px;" id="receiptTotal">—</span></div>
+                    <div class="receipt-stamp">SAH<br>MASUK<br>KAS DAERAH</div>
+                </div>
+                <div class="receipt-footer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Tanda Tangan Elektronik (TTE) — Sah Secara Hukum</div>
+            </div>
+        </div>
+        <div class="btn-row" style="justify-content:center;"><button class="btn btn-secondary" onclick="resetApp()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Transaksi Baru</button><button class="btn btn-primary" onclick="downloadReceipt()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Unduh E-Karcis</button></div>
+    </div>
+</div>
+
+<div class="modal-bg" id="paymentModal"><div class="modal-box"><div class="verify-spinner" style="border-top-color:var(--blue-500);"></div><h3>Memproses Pembayaran</h3><p id="paymentModalText">Menyimpan transaksi...</p></div></div>
+<div class="toast" id="toast"><div class="toast-icon success" id="toastIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="toast-msg" id="toastMsg"></div></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   FIREBASE CONFIG (opsional)
+   Ganti "USE_FIREBASE = true" dan isi config untuk mode production.
+   Mode default = demo tanpa Firebase (langsung pakai).
+   ══════════════════════════════════════════════════════════════ */
+const KILAT_API_URL = 'http://localhost:3000';
+
+async function uploadToKilat(file, service, recordId) {
+    if (!file) throw new Error('File tidak boleh kosong');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('service', service);
+    formData.append('recordId', recordId);
+    const response = await fetch(`${KILAT_API_URL}/api/storage/upload`, { method: 'POST', body: formData });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Upload gagal ke Kilat Storage');
+    return result;
+}
+
+async function uploadMultipleFiles(filesArray, service, recordId) {
+    const results = {};
+    for (const [name, file] of filesArray) {
+        if (!file) continue;
+        results[name] = await uploadToKilat(file, service, recordId);
+    }
+    return results;
+}
+
+const USE_FIREBASE = false;
+const firebaseConfig = {
+    apiKey: "ISI_API_KEY_ANDA",
+    authDomain: "project-id-anda.firebaseapp.com",
+    projectId: "project-id-anda",
+    storageBucket: "project-id-anda.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef"
+};
+
+/* ═══ STATE ═══ */
+let currentStep = 1;
+let uploadedDocs = { ktp: false, nib: false, surat: false };
+let uploadedFiles = { ktp: null, nib: null, surat: null };
+let uploadingDocs = { ktp: false, nib: false, surat: false };
+let selectedStall = null;
+let selectedPayment = null;
+let pedagangId = null;
+let currentUser = null;
+let currentTransaction = null;
+let dbRef = null, authRef = null, storageRef = null;
+const adminFee = 2500;
+
+/* ═══ FIREBASE INIT (jika aktif) ═══ */
+let firebaseReady = false;
+
+if (USE_FIREBASE && typeof firebase !== 'undefined') {
+    try {
+        firebase.initializeApp(firebaseConfig);
+        authRef = firebase.auth();
+        dbRef = firebase.firestore();
+        storageRef = firebase.storage();
+        firebaseReady = true;
+    } catch (e) {
+        console.warn('Firebase init gagal, mode demo:', e);
+    }
+}
+
+/* ═══ STARTUP ═══ */
+if (firebaseReady) {
+    // Tampilkan login screen, tunggu auth state
+    document.getElementById('loginOverlay').style.display = '';
+    authRef.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            pedagangId = user.uid;
+            enterApp(user.email || user.displayName || 'Tamu');
+        } else {
+            currentUser = null;
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('appNav').style.display = 'none';
+            document.getElementById('appProgress').style.display = 'none';
+            document.getElementById('appContent').style.display = 'none';
+        }
+    });
+} else {
+    // MODE DEMO — langsung masuk aplikasi, tanpa login
+    currentUser = { uid: 'demo_' + Date.now(), email: 'demo@nyamanbelanje.local', displayName: 'Demo User' };
+    pedagangId = currentUser.uid;
+    enterApp('Mode Demo');
+}
+
+function enterApp(displayName) {
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('appNav').style.display = '';
+    document.getElementById('appProgress').style.display = '';
+    document.getElementById('appContent').style.display = '';
+    document.getElementById('topnavEmail').innerHTML = displayName + (firebaseReady ? '' : ' <span class="login-demo-badge">DEMO</span>');
+}
+
+/* ═══ LOGIN/REGISTER (hanya untuk mode Firebase) ═══ */
+function showLoginTab(tab) {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('loginForm').style.display = tab === 'login' ? '' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+    document.querySelectorAll('.login-tab')[tab === 'login' ? 0 : 1].classList.add('active');
+    document.getElementById('loginError').classList.remove('show');
+}
+
+function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg; el.classList.add('show');
+}
+
+async function doLogin() {
+    if (!firebaseReady) { enterApp('Demo'); return; }
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if (!email || !pass) { showLoginError('Email dan password harus diisi.'); return; }
+    document.getElementById('loginBtn').disabled = true;
+    document.getElementById('loginSpinner').style.display = 'block';
+    document.getElementById('loginBtnText').textContent = 'Memproses...';
+    try {
+        await authRef.signInWithEmailAndPassword(email, pass);
+    } catch (e) {
+        const msgs = { 'auth/user-not-found': 'Email tidak terdaftar.', 'auth/wrong-password': 'Password salah.', 'auth/invalid-email': 'Format email tidak valid.' };
+        showLoginError(msgs[e.code] || 'Gagal masuk: ' + e.message);
+    } finally {
+        document.getElementById('loginBtn').disabled = false;
+        document.getElementById('loginSpinner').style.display = 'none';
+        document.getElementById('loginBtnText').textContent = 'Masuk';
+    }
+}
+
+async function doRegister() {
+    if (!firebaseReady) { enterApp('Demo'); return; }
+    const nama = document.getElementById('regNama').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value;
+    if (!nama || !email || !pass) { showLoginError('Semua field wajib diisi.'); return; }
+    if (pass.length < 6) { showLoginError('Password minimal 6 karakter.'); return; }
+    document.getElementById('regBtn').disabled = true;
+    document.getElementById('regSpinner').style.display = 'block';
+    document.getElementById('regBtnText').textContent = 'Memproses...';
+    try {
+        const cred = await authRef.createUserWithEmailAndPassword(email, pass);
+        await cred.user.updateProfile({ displayName: nama });
+        await dbRef.collection('pedagang').doc(cred.user.uid).set({
+            nama, email, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    } catch (e) {
+        const msgs = { 'auth/email-already-in-use': 'Email sudah terdaftar.', 'auth/weak-password': 'Password terlalu lemah.' };
+        showLoginError(msgs[e.code] || 'Gagal daftar: ' + e.message);
+    } finally {
+        document.getElementById('regBtn').disabled = false;
+        document.getElementById('regSpinner').style.display = 'none';
+        document.getElementById('regBtnText').textContent = 'Daftar Akun';
+    }
+}
+
+async function doAnonymousLogin() {
+    if (!firebaseReady) { enterApp('Demo'); return; }
+    try { await authRef.signInAnonymously(); }
+    catch (e) { showLoginError('Gagal masuk tamu: ' + e.message); }
+}
+
+async function doLogout() {
+    if (firebaseReady && authRef) {
+        await authRef.signOut();
+    } else {
+        // Mode demo — kembali ke login overlay
+        currentUser = null;
+        document.getElementById('appNav').style.display = 'none';
+        document.getElementById('appProgress').style.display = 'none';
+        document.getElementById('appContent').style.display = 'none';
+        document.getElementById('loginOverlay').classList.remove('hidden');
+    }
+}
+
+/* ═══ NAVIGASI ═══ */
+function goToStep(step) {
+    if (step === 2 && !validateStep1()) return;
+    if (step === 5 && !selectedStall) return;
+    currentStep = step;
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+    document.querySelectorAll('.progress-step').forEach(s => {
+        const n = parseInt(s.dataset.step);
+        s.classList.remove('active', 'done');
+        if (n < step) s.classList.add('done');
+        else if (n === step) s.classList.add('active');
+    });
+    for (let i = 1; i <= 5; i++) {
+        const l = document.getElementById('line' + i);
+        if (l) l.classList.toggle('active', i < step);
+    }
+    if (step === 5) populatePayment();
+    if (step === 2) {
+        syncUploadStateFromInputs();
+        document.getElementById('rejectBanner').classList.remove('show');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep1() {
+    const required = [{ id: 'namaLengkap', l: 'Nama Lengkap' }, { id: 'nik', l: 'NIK' }, { id: 'telepon', l: 'Telepon' }, { id: 'alamat', l: 'Alamat' }, { id: 'nib', l: 'NIB' }, { id: 'namaUsaha', l: 'Nama Usaha' }, { id: 'jenisUsaha', l: 'Jenis Usaha' }, { id: 'pasar', l: 'Pasar' }];
+    for (const r of required) {
+        const e = document.getElementById(r.id);
+        if (!e.value.trim()) { showToast('error', r.l + ' wajib diisi'); e.focus(); e.style.borderColor = '#DC2626'; setTimeout(() => e.style.borderColor = '', 2000); return false; }
+    }
+    if (document.getElementById('nik').value.length !== 16) { showToast('error', 'NIK harus 16 digit'); return false; }
+    return true;
+}
+
+/* ═══ UPLOAD ═══ */
+function handleUpload(input, zoneId, docType) {
+    try {
+        var zone = document.getElementById(zoneId);
+        var file = input && input.files ? input.files[0] : null;
+        if (!zone || !file) return;
+
+        var maxSize = 2 * 1024 * 1024;
+        var errId = 'err' + docType.charAt(0).toUpperCase() + docType.slice(1);
+        var errEl = document.getElementById(errId);
+        if (file.size > maxSize) {
+            if (errEl) {
+                errEl.textContent = 'Ukuran file maks. 2MB (' + (file.size / 1024 / 1024).toFixed(1) + 'MB)';
+                errEl.style.display = 'block';
+            }
+            input.value = '';
+            return;
+        }
+        if (errEl) {
+            errEl.textContent = '';
+            errEl.style.display = 'none';
+        }
+
+        var rejectBanner = document.getElementById('rejectBanner');
+        if (rejectBanner) rejectBanner.classList.remove('show');
+
+        uploadedDocs[docType] = true;
+        uploadedFiles[docType] = { key: null, name: file.name, size: file.size, local: true };
+        zone.classList.add('uploaded');
+        var uploadText = zone.querySelector('.upload-text');
+        var uploadSubtext = zone.querySelector('.upload-subtext');
+        var uploadIcon = zone.querySelector('.upload-icon');
+        if (uploadText) uploadText.textContent = docType.toUpperCase() + ' — Tersedia';
+        if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ')';
+        if (uploadIcon) uploadIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+        showToast('success', docType.toUpperCase() + ' berhasil diunggah');
+
+        var recordId = pedagangId || 'e-ret-' + Date.now();
+        uploadToKilat(file, 'e-retribusi', recordId).then(function(kilatResult) {
+            uploadedFiles[docType] = { key: kilatResult.key, name: file.name, size: file.size, contentType: kilatResult.contentType };
+            if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ' — disimpan di Kilat)';
+        }).catch(function(error) {
+            if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ' — disimpan lokal)';
+            console.error('Upload Kilat gagal:', error);
+        });
+    } catch (e) {
+        console.error('handleUpload error:', e);
+        showToast('error', 'Upload error: ' + e.message);
+    }
+}
+
+function removeUpload(zoneId, fileId, docType) {
+    const zone = document.getElementById(zoneId);
+    document.getElementById(fileId).value = '';
+    zone.classList.remove('uploaded', 'uploading');
+    const labels = { ktp: ['Unggah KTP', 'JPG, PNG (maks. 2MB)'], nib: ['Unggah NIB', 'PDF, JPG (maks. 2MB)'], surat: ['Unggah Surat', 'PDF (maks. 2MB)'] };
+    zone.querySelector('.upload-text').textContent = labels[docType][0];
+    zone.querySelector('.upload-subtext').textContent = labels[docType][1];
+    const svgMap = { ktp: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>', nib: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>', surat: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>' };
+    zone.querySelector('.upload-icon').innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + svgMap[docType] + '</svg>';
+    const progWrap = document.getElementById('progress' + docType.charAt(0).toUpperCase() + docType.slice(1));
+    if (progWrap) progWrap.style.display = 'none';
+    uploadedDocs[docType] = false;
+    uploadedFiles[docType] = null;
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return Math.round(bytes / 1024 * 10) / 10 + ' KB';
+    return Math.round(bytes / 1048576 * 10) / 10 + ' MB';
+}
+
+/* ═══ VERIFIKASI ═══ */
+function syncUploadStateFromInputs() {
+    const inputMap = { ktp: 'fileKTP', nib: 'fileNIB', surat: 'fileSurat' };
+    for (const [docType, inputId] of Object.entries(inputMap)) {
+        const input = document.getElementById(inputId);
+        if (input && input.files && input.files.length > 0 && !uploadedDocs[docType]) {
+            uploadedDocs[docType] = true;
+            uploadedFiles[docType] = { key: null, name: input.files[0].name, size: input.files[0].size, local: true };
+        }
+    }
+}
+
+function startVerification() {
+    syncUploadStateFromInputs();
+    const missing = Object.entries(uploadedDocs).filter(([, ok]) => !ok).map(([key]) => key.toUpperCase());
+    if (missing.length) {
+        showToast('error', 'Dokumen belum lengkap: ' + missing.join(', '));
+        document.getElementById('rejectText').textContent = 'Dokumen belum lengkap: ' + missing.join(', ') + '. Silakan unggah kembali.';
+        document.getElementById('rejectBanner').classList.add('show');
+        return;
+    }
+    const allUploaded = true;
+    goToStep(3);
+
+    const sp = document.getElementById('verifySpinner'), pn = document.getElementById('verifyPanel');
+    const sc = document.getElementById('verifySuccess'), sr = document.getElementById('verifyReject');
+    const sb = document.getElementById('step3Btns');
+    sp.style.display = 'block'; sc.style.display = 'none'; sr.style.display = 'none'; sb.style.display = 'none';
+    pn.querySelector('.verify-title').style.display = '';
+    pn.querySelector('.verify-text').style.display = '';
+    pn.querySelector('.verify-checks').style.display = '';
+
+    // Update check labels based on mode
+    document.querySelectorAll('#vc1 span, #vc2 span, #vc3 span').forEach((s, i) => {
+        const labels = firebaseReady
+            ? ['Menyimpan data pedagang ke Firestore', 'Memverifikasi dokumen & NIB', 'Validasi data usaha & kios']
+            : ['Memeriksa data identitas pedagang', 'Memverifikasi dokumen & NIB', 'Validasi data usaha & kios'];
+        s.textContent = labels[i];
+    });
+
+    let i = 0;
+    const iv = setInterval(async () => {
+        if (i < 3) {
+            document.getElementById('vc' + (i + 1)).classList.add('done');
+
+            // Simpan ke Firestore jika Firebase aktif
+            if (i === 0 && firebaseReady && dbRef && pedagangId) {
+                try {
+                    const docUrls = {};
+                    for (const [k, v] of Object.entries(uploadedFiles)) {
+                        if (v && typeof v === 'object' && v.downloadUrl) {
+                            docUrls[k] = { name: v.name, storagePath: v.storagePath, downloadUrl: v.downloadUrl };
+                        }
+                    }
+                    await dbRef.collection('pedagang').doc(pedagangId).set({
+                        nama: document.getElementById('namaLengkap').value,
+                        nik: document.getElementById('nik').value,
+                        telepon: document.getElementById('telepon').value,
+                        email: document.getElementById('email').value,
+                        alamat: document.getElementById('alamat').value,
+                        nib: document.getElementById('nib').value,
+                        namaUsaha: document.getElementById('namaUsaha').value,
+                        jenisUsaha: document.getElementById('jenisUsaha').value,
+                        pasar: document.getElementById('pasar').value,
+                        dokumen: docUrls,
+                        statusVerifikasi: allUploaded ? 'lengkap' : 'tidak_lengkap',
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch (e) { console.error('Gagal simpan ke Firestore:', e); }
+            }
+            i++;
+        } else {
+            clearInterval(iv);
+            setTimeout(() => {
+                sp.style.display = 'none';
+                pn.querySelector('.verify-title').style.display = 'none';
+                pn.querySelector('.verify-text').style.display = 'none';
+                pn.querySelector('.verify-checks').style.display = 'none';
+                if (allUploaded) {
+                    sc.style.display = 'block'; sb.style.display = 'flex';
+                    showToast('success', 'Verifikasi berhasil' + (firebaseReady ? ' — data tersimpan di Firestore' : ''));
+                } else {
+                    sr.style.display = 'block';
+                    document.getElementById('rejectBanner').classList.add('show');
+                    showToast('error', 'Verifikasi gagal — dokumen tidak lengkap');
+                }
+            }, 400);
+        }
+    }, 700);
+}
+
+/* ═══ STALL ═══ */
+function selectStall(el, k, a) {
+    document.querySelectorAll('.stall-item').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedStall = { kios: k, amount: a };
+    document.getElementById('btnToPayment').disabled = false;
+}
+
+/* ═══ PAYMENT ═══ */
+function populatePayment() {
+    document.getElementById('payNama').textContent = document.getElementById('namaLengkap').value;
+    document.getElementById('payKios').textContent = selectedStall ? 'Kios ' + selectedStall.kios : '—';
+    document.getElementById('payAmount').textContent = selectedStall ? formatRupiah(selectedStall.amount) : '—';
+    document.getElementById('payTotal').textContent = selectedStall ? formatRupiah(selectedStall.amount + adminFee) : '—';
+}
+
+function selectPayment(el, m) {
+    document.querySelectorAll('.payment-method').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPayment = m;
+    document.getElementById('btnBayar').disabled = false;
+}
+
+async function processPayment() {
+    const m = document.getElementById('paymentModal');
+    m.classList.add('show');
+
+    const now = new Date();
+    const trxNo = 'ERB-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random()*90000)+10000);
+    const pasarEl = document.getElementById('pasar');
+    const pasarText = pasarEl.options[pasarEl.selectedIndex]?.text || '';
+    const total = selectedStall.amount + adminFee;
+    const periode = document.getElementById('payPeriode').textContent;
+
+    if (firebaseReady && dbRef) {
+        try {
+            await dbRef.collection('transaksi').doc(trxNo).set({
+                noTransaksi: trxNo,
+                pedagangId: pedagangId,
+                namaPedagang: document.getElementById('namaLengkap').value,
+                nik: document.getElementById('nik').value,
+                kios: selectedStall.kios,
+                jumlahRetribusi: selectedStall.amount,
+                biayaAdmin: adminFee,
+                totalPembayaran: total,
+                metodePembayaran: selectedPayment,
+                pasar: pasarText,
+                periode,
+                status: 'selesai',
+                eKarcis: true,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            document.getElementById('paymentModalText').textContent = 'Transaksi tersimpan di Firestore. Menerbitkan e-karcis...';
+        } catch (e) {
+            console.error('Gagal simpan transaksi:', e);
+            showToast('error', 'Gagal menyimpan: ' + e.message);
+            m.classList.remove('show');
+            return;
+        }
+    } else {
+        // Mode demo — simpan metadata dokumen dari Kilat Storage
+        currentTransaction = { noTransaksi: trxNo, namaPedagang: document.getElementById('namaLengkap').value, nik: document.getElementById('nik').value, kios: selectedStall.kios, jumlahRetribusi: selectedStall.amount, biayaAdmin: adminFee, totalPembayaran: total, metodePembayaran: selectedPayment, pasar: pasarText, periode, dokumen: {} };
+        for (const [k, v] of Object.entries(uploadedFiles)) {
+            if (v && typeof v === 'object' && v.key) {
+                currentTransaction.dokumen[k] = { key: v.key, name: v.name, size: v.size };
+            }
+        }
+        document.getElementById('step6Subtext').textContent = 'E-karcis dan bukti setor telah diterbitkan (mode demo — dokumen disimpan di Kilat Storage)';
+    }
+
+    setTimeout(() => {
+        m.classList.remove('show');
+        generateReceipt(trxNo, total, pasarText);
+        goToStep(6);
+        showToast('success', 'Pembayaran berhasil! E-karcis diterbitkan.');
+    }, 1500);
+}
+
+function generateReceipt(trxNo, total, pasarText) {
+    const n = new Date();
+    const d = n.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('receiptNo').textContent = trxNo;
+    document.getElementById('receiptDate').textContent = d;
+    document.getElementById('receiptNama').textContent = document.getElementById('namaLengkap').value;
+    document.getElementById('receiptNIK').textContent = document.getElementById('nik').value;
+    document.getElementById('receiptKios').textContent = 'Kios ' + selectedStall.kios;
+    document.getElementById('receiptPasar').textContent = pasarText;
+    document.getElementById('receiptPeriode').textContent = document.getElementById('payPeriode').textContent;
+    document.getElementById('receiptMethod').textContent = selectedPayment;
+    document.getElementById('receiptTotal').textContent = formatRupiah(total);
+}
+
+/* ═══ HELPERS ═══ */
+function formatRupiah(a) { return 'Rp' + a.toLocaleString('id-ID'); }
+
+function showToast(t, m) {
+    const x = document.getElementById('toast'), i = document.getElementById('toastIcon');
+    i.className = 'toast-icon ' + t;
+    i.innerHTML = t === 'success'
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    document.getElementById('toastMsg').textContent = m;
+    x.classList.add('show');
+    setTimeout(() => x.classList.remove('show'), 4000);
+}
+
+function resetApp() {
+    uploadedDocs = { ktp: false, nib: false, surat: false };
+    uploadedFiles = { ktp: null, nib: null, surat: null };
+    selectedStall = null;
+    selectedPayment = null;
+    currentTransaction = null;
+    [{ z: 'uploadKTP', f: 'fileKTP', t: 'Unggah KTP', s: 'JPG, PNG (maks. 2MB)', svg: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>', dt: 'ktp' },
+     { z: 'uploadNIB', f: 'fileNIB', t: 'Unggah NIB', s: 'PDF, JPG (maks. 2MB)', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>', dt: 'nib' },
+     { z: 'uploadSurat', f: 'fileSurat', t: 'Unggah Surat', s: 'PDF (maks. 2MB)', svg: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>', dt: 'surat' }
+    ].forEach(d => {
+        const z = document.getElementById(d.z);
+        z.classList.remove('uploaded', 'uploading');
+        document.getElementById(d.f).value = '';
+        z.querySelector('.upload-text').textContent = d.t;
+        z.querySelector('.upload-subtext').textContent = d.s;
+        z.querySelector('.upload-icon').innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + d.svg + '</svg>';
+    });
+    document.querySelectorAll('.stall-item').forEach(s => s.classList.remove('selected'));
+    document.getElementById('btnToPayment').disabled = true;
+    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+    document.getElementById('btnBayar').disabled = true;
+    ['vc1', 'vc2', 'vc3'].forEach(z => document.getElementById(z).classList.remove('done'));
+    document.getElementById('rejectBanner').classList.remove('show');
+    document.getElementById('verifySpinner').style.display = 'block';
+    document.getElementById('verifySuccess').style.display = 'none';
+    document.getElementById('verifyReject').style.display = 'none';
+    document.getElementById('step3Btns').style.display = 'none';
+    const p = document.getElementById('verifyPanel');
+    p.querySelector('.verify-title').style.display = '';
+    p.querySelector('.verify-text').style.display = '';
+    p.querySelector('.verify-checks').style.display = '';
+    document.getElementById('paymentModalText').textContent = 'Menyimpan transaksi...';
+    document.getElementById('step6Subtext').textContent = firebaseReady
+        ? 'E-karcis dan bukti setor telah diterbitkan & disimpan di Firestore'
+        : 'E-karcis dan bukti setor telah diterbitkan (mode demo)';
+    goToStep(1);
+}
+
+function downloadReceipt() {
+    try {
+        if (!currentTransaction) {
+            showToast('error', 'Data transaksi belum tersedia');
+            return;
+        }
+        var t = currentTransaction;
+        var n = new Date();
+        var d = n.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>E-Karcis - ' + (t.noTransaksi || '—') + '</title><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:\'Plus Jakarta Sans\',-apple-system,sans-serif;padding:40px;color:#0F172A;}@media print{body{padding:20px;}}.header{text-align:center;border-bottom:3px solid #1a7a3a;padding-bottom:16px;margin-bottom:20px;}.header h1{font-size:18px;font-weight:800;text-transform:uppercase;color:#1a7a3a;}.header p{font-size:12px;color:#64748B;margin-top:4px;}.badge{display:inline-block;background:#E8F8EC;color:#1a7a3a;font-size:11px;font-weight:700;padding:4px 12px;border-radius:10px;margin-top:8px;}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;}.item{padding:10px 14px;background:#F8FAFC;border-radius:8px;border-left:3px solid #1a7a3a;}.label{font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;}.value{font-size:13px;font-weight:600;margin-top:2px;}.full{grid-column:1/-1;}.total{background:#E8F8EC;border-left-color:#1a7a3a;}.total .value{color:#1a7a3a;font-size:16px;}.stamp-area{display:flex;justify-content:flex-end;margin:24px 0 16px;}.stamp{border:3px solid #1a7a3a;color:#1a7a3a;padding:10px 14px;text-align:center;font-weight:800;font-size:11px;border-radius:8px;transform:rotate(-5deg);opacity:0.85;}.footer{text-align:center;font-size:10px;color:#64748B;border-top:1px solid #E2E8F0;padding-top:12px;margin-top:16px;}</style></head><body><div class="header"><h1>E-Karcis Retribusi Pasar</h1><p>Pemerintah Kabupaten Belitung Timur — Dinas Perindustrian dan Perdagangan</p><div class="badge">PEMBAYARAN BERHASIL</div></div><div class="grid"><div class="item"><div class="label">No. Transaksi</div><div class="value">' + (t.noTransaksi || '—') + '</div></div><div class="item"><div class="label">Tanggal</div><div class="value">' + d + '</div></div><div class="item"><div class="label">Nama Pedagang</div><div class="value">' + (t.namaPedagang || '—') + '</div></div><div class="item"><div class="label">NIK</div><div class="value">' + (t.nik || '—') + '</div></div><div class="item"><div class="label">Kios</div><div class="value">Kios ' + (t.kios || '—') + '</div></div><div class="item"><div class="label">Pasar</div><div class="value">' + (t.pasar || '—') + '</div></div><div class="item"><div class="label">Periode</div><div class="value">' + (t.periode || '—') + '</div></div><div class="item"><div class="label">Metode Pembayaran</div><div class="value">' + (t.metodePembayaran || '—') + '</div></div><div class="item"><div class="label">Retribusi</div><div class="value">Rp' + (t.jumlahRetribusi ? t.jumlahRetribusi.toLocaleString('id-ID') : '0') + '</div></div><div class="item"><div class="label">Biaya Admin</div><div class="value">Rp' + (t.biayaAdmin ? t.biayaAdmin.toLocaleString('id-ID') : '0') + '</div></div><div class="item full total"><div class="label">Total Dibayar</div><div class="value">Rp' + (t.totalPembayaran ? t.totalPembayaran.toLocaleString('id-ID') : '0') + '</div></div></div><div class="stamp-area"><div class="stamp">LUNAS<br>E-KARCIS</div></div><div class="footer">E-Karcis ini diterbitkan secara elektronik melalui Sistem Nyaman BELANJE — Dinas Perindustrian dan Perdagangan Kabupaten Belitung Timur</div><script>setTimeout(function(){window.print();},500)<\/script></body></html>';
+        var w = window.open('', '_blank', 'width=800,height=900');
+        if (w) {
+            w.document.write(html);
+            w.document.close();
+            showToast('success', 'Jendela cetak terbuka — pilih "Save as PDF" untuk mengunduh');
+        } else {
+            showToast('error', 'Popup diblokir oleh browser');
+        }
+    } catch (e) {
+        console.error('downloadReceipt error:', e);
+        showToast('error', 'Gagal mengunduh E-Karcis: ' + e.message);
+    }
+}
+</script>
+</body>
+</html>
