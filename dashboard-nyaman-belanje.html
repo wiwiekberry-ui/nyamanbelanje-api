@@ -790,6 +790,67 @@
 
         .modal-overlay.show { display: flex; }
 
+        /* Panel Petugas terintegrasi di dalam dashboard */
+        .panel-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(4px);
+            z-index: 250;
+            align-items: stretch;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .panel-modal-overlay.show { display: flex; }
+
+        .panel-modal {
+            width: min(1400px, 100%);
+            height: 100%;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-modal-toolbar {
+            min-height: 46px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--blue-700);
+            color: var(--white);
+        }
+
+        .panel-modal-toolbar strong { font-size: 13px; }
+
+        .panel-modal-close {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .panel-modal-close:hover { background: rgba(255,255,255,0.15); }
+
+        .panel-frame {
+            width: 100%;
+            flex: 1;
+            border: 0;
+            background: var(--slate-50);
+        }
+
         .modal {
             background: var(--white);
             border-radius: var(--radius-xl);
@@ -843,6 +904,148 @@
             font-size: 11.5px;
             color: var(--slate-500);
             line-height: 1.4;
+        }
+
+        /* Form Pengajuan Layanan */
+        .pengajuan-desc {
+            font-size: 12.5px;
+            color: var(--slate-500);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            background: var(--green-50);
+            border: 1px solid var(--green-100);
+            border-radius: var(--radius-sm);
+        }
+
+        .pengajuan-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .pengajuan-field { display: flex; flex-direction: column; gap: 5px; }
+        .pengajuan-field.full { grid-column: 1 / -1; }
+
+        .pengajuan-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .pengajuan-field label .req { color: var(--red-500); }
+
+        .pengajuan-field input,
+        .pengajuan-field select,
+        .pengajuan-field textarea {
+            width: 100%;
+            padding: 9px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--slate-900);
+            background: var(--white);
+            border: 1.5px solid var(--slate-300);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .pengajuan-field textarea { min-height: 74px; resize: vertical; }
+
+        .pengajuan-field input:focus,
+        .pengajuan-field select:focus,
+        .pengajuan-field textarea:focus {
+            border-color: var(--green-500);
+            box-shadow: 0 0 0 3px rgba(45, 181, 83, 0.12);
+        }
+
+        .pengajuan-field .field-error {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--red-500);
+            display: none;
+        }
+
+        .pengajuan-field.invalid input,
+        .pengajuan-field.invalid select,
+        .pengajuan-field.invalid textarea { border-color: var(--red-500); }
+
+        .pengajuan-field.invalid .field-error { display: block; }
+
+        .pengajuan-status {
+            display: none;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .pengajuan-status.show { display: flex; }
+        .pengajuan-status.success { background: var(--green-50); color: var(--green-700); border: 1px solid var(--green-100); }
+        .pengajuan-status.error { background: var(--red-100); color: var(--red-500); border: 1px solid #FECACA; }
+        .pengajuan-status.info { background: var(--blue-50); color: var(--blue-600); border: 1px solid var(--blue-100); }
+
+        .pengajuan-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .pengajuan-btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .pengajuan-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        .pengajuan-btn.primary { background: var(--green-600); color: #fff; }
+        .pengajuan-btn.primary:hover:not(:disabled) { background: var(--green-700); transform: translateY(-1px); }
+
+        .pengajuan-btn.ghost { background: var(--white); color: var(--slate-700); border-color: var(--slate-300); }
+        .pengajuan-btn.ghost:hover { background: var(--slate-50); }
+
+        .pengajuan-hint {
+            font-size: 11px;
+            color: var(--slate-500);
+            line-height: 1.5;
+            margin-top: 14px;
+        }
+
+        /* Data Pedagang dari Google Sheets */
+        .pedagang-dashboard-card { margin-top: 24px; }
+        .pedagang-toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+        .pedagang-toolbar input { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid var(--slate-300); border-radius: var(--radius-sm); font: inherit; font-size: 12px; outline: none; }
+        .pedagang-toolbar input:focus { border-color: var(--green-500); box-shadow: 0 0 0 3px rgba(45,181,83,.1); }
+        .pedagang-refresh { border: 0; background: var(--green-600); color: #fff; border-radius: var(--radius-sm); padding: 9px 13px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .pedagang-refresh:hover { background: var(--green-700); }
+        .pedagang-refresh:disabled { opacity: .6; cursor: wait; }
+        .pedagang-count { color: var(--slate-500); font-size: 11px; white-space: nowrap; }
+        .pedagang-table-wrap { overflow-x: auto; border: 1px solid var(--slate-100); border-radius: var(--radius-sm); }
+        .pedagang-table { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 11.5px; }
+        .pedagang-table th { background: var(--slate-50); color: var(--slate-700); font-weight: 700; text-align: left; padding: 10px 11px; border-bottom: 1px solid var(--slate-100); white-space: nowrap; }
+        .pedagang-table td { padding: 9px 11px; border-bottom: 1px solid var(--slate-100); color: var(--slate-700); vertical-align: top; }
+        .pedagang-table tr:last-child td { border-bottom: 0; }
+        .pedagang-table tr:hover td { background: var(--slate-50); }
+        .pedagang-empty { padding: 22px !important; text-align: center; color: var(--slate-500) !important; }
+        .pedagang-status { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--green-100); color: var(--green-700); }
+        .pedagang-status.nonaktif { background: var(--red-100); color: var(--red-500); }
+        .pedagang-error { color: var(--red-500) !important; }
+
+        @media (max-width: 640px) {
+            .pengajuan-grid { grid-template-columns: 1fr; }
+            .pengajuan-actions { flex-direction: column-reverse; }
+            .pengajuan-btn { width: 100%; }
         }
 
         /* Responsive */
@@ -950,7 +1153,7 @@
             Dashboard Monitoring
         </div>
 
-        <div class="nav-item" onclick="window.open('panel-petugas.html','_blank')">
+        <div class="nav-item" onclick="openPetugasPanel()">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Panel Petugas
         </div>
@@ -1076,8 +1279,8 @@
                 <h4>Layanan Pasar & Retribusi</h4>
                 <p>Integrasi layanan fisik pasar dengan sistem digital e-retribusi</p>
                 <div class="menu-card-sub">
-                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();window.open('sewa-kios-petak.html','_blank')">Sewa Kios/Petak Pasar</span>
-                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();window.open('e-retribusi-pasar.html','_blank')">E-Retribusi Pasar</span>
+                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();location.href='sewa-kios-petak.html'">Sewa Kios/Petak Pasar</span>
+                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();location.href='e-retribusi-pasar.html'">E-Retribusi Pasar</span>
                 </div>
                 <div class="menu-card-footer">
                     <span class="menu-card-count">2 layanan</span>
@@ -1087,7 +1290,7 @@
                 </div>
             </div>
 
-            
+
             <!-- Menu 3 -->
             <div class="menu-card" onclick="openModal('modal-metrologi')">
                 <div class="menu-card-icon">
@@ -1136,7 +1339,7 @@
                 <h4>Informasi Harga & Stabilitas Perdagangan</h4>
                 <p>Operasi pasar, pasar murah, dan permintaan data perindustrian</p>
                 <div class="menu-card-sub">
-                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();window.open('operasi-pasar-murah.html','_blank')">Operasi Pasar & Pasar Murah</span>
+                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();location.href='operasi-pasar-murah.html'">Operasi Pasar & Pasar Murah</span>
 		    <span>Permintaan Data & Informasi</span>
                 </div>
                 <div class="menu-card-footer">
@@ -1155,7 +1358,7 @@
                 <h4>Pusat Bantuan & Pengaduan</h4>
                 <p>Sarana pengaduan masyarakat dan pemantauan status layanan</p>
                 <div class="menu-card-sub">
-                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();window.open('layanan-pengaduan.html','_blank')">Pengaduan & Saran</span>
+                    <span style="cursor:pointer;font-weight:600;color:var(--green-600);" onclick="event.stopPropagation();location.href='layanan-pengaduan.html'">Pengaduan & Saran</span>
                     <span>Status Layanan</span>
                 </div>
                 <div class="menu-card-footer">
@@ -1166,7 +1369,7 @@
                 </div>
             </div>
             <!-- Menu 6 - Panel Petugas -->
-            <div class="menu-card" onclick="window.open('panel-petugas.html','_blank')" style="border:2px solid var(--green-600);">
+            <div class="menu-card" onclick="openPetugasPanel()" style="border:2px solid var(--green-600);">
                 <div class="menu-card-icon" style="background:var(--green-600);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
@@ -1185,7 +1388,7 @@
         <div class="quick-access">
             <span class="quick-label">Akses Cepat</span>
             <div class="quick-items">
-                <div class="quick-chip" onclick="window.open('e-retribusi-pasar.html','_blank')">
+                <div class="quick-chip" onclick="location.href='e-retribusi-pasar.html'">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18l-2 13H5L3 3z"/></svg>
                     E-Retribusi
                 </div>
@@ -1197,11 +1400,15 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
                     Daftar HaKI
                 </div>
-                <div class="quick-chip" onclick="window.open('panel-petugas.html','_blank')" style="background:var(--green-600);color:#fff;border-color:var(--green-600);">
+                <div class="quick-chip" onclick="openPetugasPanel()" style="background:var(--green-600);color:#fff;border-color:var(--green-600);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     Panel Petugas
                 </div>
-                <div class="quick-chip" onclick="window.open('layanan-pengaduan.html','_blank')">
+                <div class="quick-chip" onclick="openModal('modal-pengajuan')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Pengajuan Layanan
+                </div>
+                <div class="quick-chip" onclick="location.href='layanan-pengaduan.html'">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>
                     Pengaduan
                 </div>
@@ -1209,6 +1416,48 @@
             <div class="spbe-badge">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Terintegrasi SPBE
+            </div>
+        </div>
+
+        <!-- Data Pedagang Terbaru -->
+        <div class="card pedagang-dashboard-card">
+            <div class="card-header">
+                <h3>Data Pedagang Terbaru</h3>
+                <span class="pedagang-count" id="dashboardPedagangCount">Memuat...</span>
+            </div>
+            <div class="card-body">
+                <div class="pedagang-toolbar">
+                    <input type="search" id="dashboardPedagangSearch" placeholder="Cari nama, NIK, NIB, objek, atau kios..." oninput="filterDashboardPedagang()">
+                    <button class="pedagang-refresh" id="dashboardPedagangRefresh" onclick="loadDashboardPedagang()">Refresh</button>
+                </div>
+                <div class="pengajuan-status" id="pedagangNotice" style="margin-top:-4px;"></div>
+                <div class="pedagang-table-wrap">
+                    <table class="pedagang-table">
+                        <thead><tr><th>Nama</th><th>NIK</th><th>NIB</th><th>Pasar</th><th>Objek Retribusi</th><th>No. Kios</th><th>Status</th></tr></thead>
+                        <tbody id="dashboardPedagangBody"><tr><td colspan="7" class="pedagang-empty">Memuat data pedagang...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pembayaran E-Retribusi (dari modul e-retribusi-pasar.html) -->
+        <div class="card pedagang-dashboard-card">
+            <div class="card-header">
+                <h3>Pembayaran E-Retribusi</h3>
+                <span class="pedagang-count" id="dashboardTransaksiCount">Memuat...</span>
+            </div>
+            <div class="card-body">
+                <div class="pedagang-toolbar">
+                    <input type="search" id="dashboardTransaksiSearch" placeholder="Cari no transaksi, nama, NIK, pasar, atau metode bayar..." oninput="filterDashboardTransaksi()">
+                    <button class="pedagang-refresh" id="dashboardTransaksiRefresh" onclick="loadDashboardTransaksi()">Refresh</button>
+                </div>
+                <div class="pengajuan-status" id="transaksiNotice" style="margin-top:-4px;"></div>
+                <div class="pedagang-table-wrap">
+                    <table class="pedagang-table">
+                        <thead><tr><th>No Transaksi</th><th>Tanggal</th><th>Nama</th><th>Pasar</th><th>Objek</th><th>Metode Bayar</th><th>Total</th></tr></thead>
+                        <tbody id="dashboardTransaksiBody"><tr><td colspan="7" class="pedagang-empty">Memuat data pembayaran...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -1301,6 +1550,19 @@
     </div>
 </main>
 
+<!-- Panel Petugas terintegrasi: dimuat di dalam dashboard, bukan window baru -->
+<div class="panel-modal-overlay" id="panelPetugasOverlay" onclick="if(event.target===this)closePetugasPanel()">
+    <section class="panel-modal" role="dialog" aria-modal="true" aria-label="Panel Petugas">
+        <div class="panel-modal-toolbar">
+            <strong>Panel Petugas — Nyaman BELANJE</strong>
+            <button class="panel-modal-close" onclick="closePetugasPanel()" aria-label="Tutup Panel Petugas">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <iframe class="panel-frame" id="panelPetugasFrame" title="Panel Petugas" src="about:blank"></iframe>
+    </section>
+</div>
+
 <!-- ═══════════ MODALS ═══════════ -->
 
 <!-- Modal: Layanan Pasar & Retribusi -->
@@ -1311,11 +1573,11 @@
             <button class="modal-close" onclick="closeModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <ul class="modal-sub-list">
-            <li class="modal-sub-item" style="cursor:pointer;" onclick="window.open('sewa-kios-petak.html','_blank')">
+            <li class="modal-sub-item" style="cursor:pointer;" onclick="location.href='sewa-kios-petak.html'">
                 <h4>Sewa Kios/Petak Pasar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.5" style="vertical-align:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></h4>
                 <p>Layanan pendaftaran dan penandatanganan perjanjian sewa kios milik pemerintah daerah. Ajukan permohonan sewa secara digital dan pantau status persetujuan.</p>
             </li>
-            <li class="modal-sub-item" style="cursor:pointer;" onclick="window.open('e-retribusi-pasar.html','_blank')">
+            <li class="modal-sub-item" style="cursor:pointer;" onclick="location.href='e-retribusi-pasar.html'">
                 <h4>E-Retribusi Pasar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.5" style="vertical-align:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></h4>
                 <p>Sistem penarikan dan penyetoran retribusi pasar secara digital bagi pedagang dan penyewa kios. Bayar retribusi tanpa perlu antri secara fisik.</p>
             </li>
@@ -1380,8 +1642,8 @@
         </div>
         <ul class="modal-sub-list">
             <li class="modal-sub-item">
-                
- 	    <li class="modal-sub-item" style="cursor:pointer;" onclick="window.open('operasi-pasar-murah.html','_blank')">
+
+ 	    <li class="modal-sub-item" style="cursor:pointer;" onclick="location.href='operasi-pasar-murah.html'">
                 <h4>Operasi Pasar / Pasar Murah <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.5" style="vertical-align:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></h4>
                 <p>Fasilitasi operasi pasar dan pasar murah untuk menyediakan barang kebutuhan pokok dengan harga terjangkau bagi masyarakat. Layanan GRATIS.</p>
             </li>
@@ -1405,7 +1667,7 @@
             <button class="modal-close" onclick="closeModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <ul class="modal-sub-list">
-            <li class="modal-sub-item" style="cursor:pointer;" onclick="window.open('layanan-pengaduan.html','_blank')">
+            <li class="modal-sub-item" style="cursor:pointer;" onclick="location.href='layanan-pengaduan.html'">
                 <h4>Pengaduan & Saran</h4>
                 <p>Sarana bagi masyarakat untuk menyampaikan keluhan atau masukan terkait layanan publik. Laporan Anda akan ditindaklanjuti oleh petugas terkait.</p>
             </li>
@@ -1417,6 +1679,83 @@
     </div>
 </div>
 
+<!-- Modal: Form Pengajuan Layanan -->
+<div class="modal-overlay" id="modal-pengajuan" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 style="color:var(--green-700);">Form Pengajuan Layanan</h3>
+            <button class="modal-close" onclick="closeModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+
+        <p class="pengajuan-desc">Layanan publik Dinas Perindustrian dan Perdagangan Kabupaten Belitung Timur. Pengajuan Anda akan tercatat otomatis dalam basis data layanan dan diverifikasi oleh petugas.</p>
+
+        <div class="pengajuan-status" id="pjStatus"></div>
+
+        <div class="pengajuan-grid">
+            <div class="pengajuan-field" id="pjF-nama">
+                <label>Nama Lengkap <span class="req">*</span></label>
+                <input type="text" id="pjNama" placeholder="Nama sesuai KTP" autocomplete="name">
+                <span class="field-error">Nama lengkap wajib diisi</span>
+            </div>
+            <div class="pengajuan-field" id="pjF-nik">
+                <label>NIK <span class="req">*</span></label>
+                <input type="text" id="pjNik" placeholder="16 digit NIK" maxlength="16" inputmode="numeric">
+                <span class="field-error">NIK harus 16 digit angka</span>
+            </div>
+            <div class="pengajuan-field" id="pjF-telepon">
+                <label>Nomor Telepon <span class="req">*</span></label>
+                <input type="tel" id="pjTelepon" placeholder="08xxxxxxxxxx" inputmode="tel">
+                <span class="field-error">Nomor telepon wajib diisi</span>
+            </div>
+            <div class="pengajuan-field" id="pjF-email">
+                <label>Email</label>
+                <input type="email" id="pjEmail" placeholder="nama@email.com" autocomplete="email">
+                <span class="field-error">Format email tidak valid</span>
+            </div>
+            <div class="pengajuan-field" id="pjF-layanan">
+                <label>Jenis Layanan <span class="req">*</span></label>
+                <select id="pjLayanan">
+                    <option value="">— Pilih Layanan —</option>
+                    <option value="Layanan Pasar & Retribusi">Layanan Pasar &amp; Retribusi</option>
+                    <option value="Layanan Metrologi Legal (Tera/Tera Ulang)">Layanan Metrologi Legal (Tera/Tera Ulang)</option>
+                    <option value="Pemberdayaan Industri & HaKI">Pemberdayaan Industri &amp; HaKI</option>
+                    <option value="Informasi Harga & Stabilitas Perdagangan">Informasi Harga &amp; Stabilitas Perdagangan</option>
+                    <option value="Pusat Bantuan & Pengaduan">Pusat Bantuan &amp; Pengaduan</option>
+                </select>
+                <span class="field-error">Jenis layanan wajib dipilih</span>
+            </div>
+            <div class="pengajuan-field" id="pjF-pasar">
+                <label>Pasar / Lokasi</label>
+                <select id="pjPasar">
+                    <option value="">— Tidak berlaku —</option>
+                    <option value="Pasar Manggar">Pasar Manggar</option>
+                    <option value="Pasar Gantung">Pasar Gantung</option>
+                    <option value="Pasar Kelapa Kampit">Pasar Kelapa Kampit</option>
+                    <option value="Pasar Sukamandi">Pasar Sukamandi</option>
+                </select>
+                <span class="field-error"></span>
+            </div>
+            <div class="pengajuan-field full" id="pjF-perihal">
+                <label>Perihal Pengajuan <span class="req">*</span></label>
+                <input type="text" id="pjPerihal" placeholder="Contoh: Permohonan tera timbangan dagang 30 kg">
+                <span class="field-error">Perihal pengajuan wajib diisi</span>
+            </div>
+            <div class="pengajuan-field full" id="pjF-keterangan">
+                <label>Keterangan</label>
+                <textarea id="pjKeterangan" placeholder="Uraikan kebutuhan atau keluhan Anda (opsional)"></textarea>
+                <span class="field-error"></span>
+            </div>
+        </div>
+
+        <p class="pengajuan-hint">Setelah dikirim, nomor pengajuan akan muncul di layar. Simpan nomor tersebut untuk melacak status layanan Anda.</p>
+
+        <div class="pengajuan-actions">
+            <button class="pengajuan-btn ghost" onclick="closeModal()">Batal</button>
+            <button class="pengajuan-btn primary" id="pjSubmitBtn" onclick="kirimPengajuan()">Kirim Pengajuan</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // Nav active state
 function setActive(el, section) {
@@ -1424,10 +1763,28 @@ function setActive(el, section) {
     el.classList.add('active');
 }
 
+// Panel Petugas terintegrasi di dalam dashboard
+function openPetugasPanel() {
+    closeModal();
+    document.getElementById('panelPetugasFrame').src = 'panel-petugas-edit-aktif.html';
+    document.getElementById('panelPetugasOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePetugasPanel() {
+    document.getElementById('panelPetugasOverlay').classList.remove('show');
+    document.getElementById('panelPetugasFrame').src = 'about:blank';
+    document.body.style.overflow = '';
+}
+
 // Modal
 function openModal(id) {
     document.getElementById(id).classList.add('show');
     document.body.style.overflow = 'hidden';
+    if (id === 'modal-pengajuan') {
+        pjClearStatus();
+        document.querySelectorAll('#modal-pengajuan .pengajuan-field').forEach(f => f.classList.remove('invalid'));
+    }
 }
 
 function closeModal() {
@@ -1435,12 +1792,339 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
+// Form Pengajuan Layanan → Google Sheets
+//
+// Ganti nilai di bawah dengan URL Web App Apps Script yang sudah dideploy
+// (panduan lengkap ada di berkas google-apps-script-pengajuan.js).
+// Selama masih placeholder, pengiriman diminta lagi isian Anda tanpa
+// menghapus data yang sudah diketik.
+const PENGAJUAN_ENDPOINT = 'TEMPEL_URL_ENDPOINT_DI_SINI';
+
+function pjStatus(type, message) {
+    const el = document.getElementById('pjStatus');
+    el.className = 'pengajuan-status show ' + type;
+    el.textContent = message;
+}
+
+function pjClearStatus() {
+    const el = document.getElementById('pjStatus');
+    el.className = 'pengajuan-status';
+    el.textContent = '';
+}
+
+function pjMark(fieldId, invalid) {
+    const el = document.getElementById(fieldId);
+    if (el) el.classList.toggle('invalid', !!invalid);
+}
+
+function pjValue(id) { return (document.getElementById(id).value || '').trim(); }
+
+function validatePengajuan() {
+    const checks = [
+        { field: 'pjF-nama', el: 'pjNama', ok: pjValue('pjNama').length > 0 },
+        { field: 'pjF-nik', el: 'pjNik', ok: /^\d{16}$/.test(pjValue('pjNik').replace(/\D/g, '')) },
+        { field: 'pjF-telepon', el: 'pjTelepon', ok: pjValue('pjTelepon').length >= 8 },
+        { field: 'pjF-email', el: 'pjEmail', ok: pjValue('pjEmail') === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pjValue('pjEmail')) },
+        { field: 'pjF-layanan', el: 'pjLayanan', ok: pjValue('pjLayanan') !== '' },
+        { field: 'pjF-perihal', el: 'pjPerihal', ok: pjValue('pjPerihal').length > 0 }
+    ];
+    let firstBad = null;
+    checks.forEach(c => {
+        pjMark(c.field, !c.ok);
+        if (!c.ok && !firstBad) firstBad = c.el;
+    });
+    if (firstBad) {
+        const el = document.getElementById(firstBad);
+        if (el) el.focus();
+        pjStatus('error', 'Mohon lengkapi kolom yang ditandai merah sebelum mengirim pengajuan.');
+        return null;
+    }
+    return {
+        id: 'PJ-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random() * 900 + 100),
+        nama: pjValue('pjNama'),
+        nik: pjValue('pjNik').replace(/\D/g, ''),
+        telepon: pjValue('pjTelepon'),
+        email: pjValue('pjEmail'),
+        layanan: pjValue('pjLayanan'),
+        pasar: pjValue('pjPasar'),
+        perihal: pjValue('pjPerihal'),
+        keterangan: pjValue('pjKeterangan'),
+        tanggal: new Date().toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    };
+}
+
+async function kirimPengajuan() {
+    const data = validatePengajuan();
+    if (!data) return;
+
+    const btn = document.getElementById('pjSubmitBtn');
+
+    if (PENGAJUAN_ENDPOINT.indexOf('TEMPEL_URL') === 0) {
+        pjStatus('info', 'Endpoint belum dikonfigurasi. Isian Anda tidak terhapus — tempel URL Web App Apps Script pada konstanta PENGAJUAN_ENDPOINT, lalu klik Kirim Pengajuan lagi.');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
+    pjStatus('info', 'Sedang mengirim pengajuan ke basis data layanan...');
+
+    try {
+        const response = await fetch(PENGAJUAN_ENDPOINT, {
+            method: 'POST',
+            body: new URLSearchParams(Object.assign({ action: 'pengajuan' }, data))
+        });
+        const text = await response.text();
+        let result;
+        try { result = JSON.parse(text); } catch (e) { throw new Error('Respons layanan tidak valid. Periksa deployment Google Apps Script.'); }
+        if (!result.ok) throw new Error(result.error || 'Pengajuan gagal disimpan.');
+
+        pjStatus('success', 'Pengajuan berhasil disimpan. Nomor Anda: ' + (result.id || data.id) + '. Simpan nomor tersebut untuk pelacakan.');
+        document.getElementById('pjPerihal').value = '';
+        document.getElementById('pjKeterangan').value = '';
+    } catch (err) {
+        pjStatus('error', 'Gagal menyimpan pengajuan: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Pengajuan';
+    }
+}
+
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+        closeModal();
+        closePetugasPanel();
+    }
 });
+
+// Data pedagang dashboard — baca CSV publik spreadsheet dan petakan kolom.
+// gid tab "Pedagang" = 175701171 (gid 0 adalah tab kosong tanpa baris data).
+const PEDAGANG_SHEET_ID = '1dmhw50fezJqVcdLDH1XdnTZVODH3g8UaTiDjdIt_3so';
+const PEDAGANG_SHEET_GID = '175701171';
+let dashboardPedagangRows = [];
+
+function escapeDashboardHtml(value) {
+    const el = document.createElement('div');
+    el.textContent = value == null || value === '' ? '-' : String(value);
+    return el.innerHTML;
+}
+
+/* Parser CSV yang menangani koma dan baris baru di dalam tanda kutip. */
+function parseDashboardCsv(text) {
+    const rows = [];
+    let row = [], cell = '', quoted = false;
+    for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (quoted) {
+            if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+            else if (ch === '"') quoted = false;
+            else cell += ch;
+        } else if (ch === '"') quoted = true;
+        else if (ch === ',') { row.push(cell); cell = ''; }
+        else if (ch === '\n') { row.push(cell.replace(/\r$/, '')); rows.push(row); row = []; cell = ''; }
+        else cell += ch;
+    }
+    if (cell.length || row.length) { row.push(cell.replace(/\r$/, '')); rows.push(row); }
+    return rows;
+}
+
+async function loadDashboardPedagang() {
+    const body = document.getElementById('dashboardPedagangBody');
+    const count = document.getElementById('dashboardPedagangCount');
+    const btn = document.getElementById('dashboardPedagangRefresh');
+    if (!body) return;
+    if (btn) { btn.disabled = true; btn.textContent = 'Memuat...'; }
+    body.innerHTML = '<tr><td colspan="7" class="pedagang-empty">Memuat data terbaru...</td></tr>';
+    count.textContent = 'Memuat...';
+    try {
+        const url = 'https://docs.google.com/spreadsheets/d/' + PEDAGANG_SHEET_ID + '/export?format=csv&gid=' + PEDAGANG_SHEET_GID + '&_=' + Date.now();
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error('Spreadsheet merespons HTTP ' + response.status + '.');
+        const csv = parseDashboardCsv(await response.text());
+        if (csv.length < 2) throw new Error('Spreadsheet belum memiliki data pedagang.');
+        const headers = csv[0].map(h => String(h || '').trim().toLowerCase());
+        const col = function (names) {
+            for (const name of names) { const i = headers.indexOf(name.toLowerCase()); if (i !== -1) return i; }
+            return -1;
+        };
+        const ix = {
+            id:col(['id']), nama:col(['nama']), nik:col(['nik']), hp:col(['hp','no hp','nomor hp']),
+            email:col(['email']), pasar:col(['lokasi pasar','pasar']), nib:col(['nib']),
+            objek:col(['objek retribusi','objek']), kios:col(['nomor kios','no kios','kios']),
+            usaha:col(['jenis usaha','usaha']), status:col(['status']), alamat:col(['alamat'])
+        };
+        if (ix.nama === -1) throw new Error('Kolom Nama tidak ditemukan. Pastikan header spreadsheet benar.');
+        dashboardPedagangRows = csv.slice(1).map(function (r) {
+            const get = i => i < 0 ? '' : (r[i] || '').trim();
+            return { id:get(ix.id), nama:get(ix.nama), nik:get(ix.nik), hp:get(ix.hp), email:get(ix.email), pasar:get(ix.pasar), nib:get(ix.nib), objek:get(ix.objek), kios:get(ix.kios), usaha:get(ix.usaha), status:get(ix.status), alamat:get(ix.alamat) };
+        }).filter(p => p.nama || p.nik);
+        renderDashboardPedagang(dashboardPedagangRows);
+        dashboardPedagangLoadedAt = new Date();
+        setDashboardPedagangCount(dashboardPedagangRows.length + ' pedagang');
+    } catch (e) {
+        count.textContent = 'Gagal memuat';
+        body.innerHTML = '<tr><td colspan="7" class="pedagang-empty pedagang-error">' + escapeDashboardHtml(e.message) + ' Pastikan spreadsheet dapat diakses sebagai Viewer.</td></tr>';
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Refresh'; }
+    }
+}
+
+function renderDashboardPedagang(rows) {
+    const body = document.getElementById('dashboardPedagangBody');
+    if (!body) return;
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="7" class="pedagang-empty">Belum ada data pedagang.</td></tr>'; return; }
+    body.innerHTML = rows.slice().reverse().slice(0, 100).map(function (p) {
+        const status = String(p.status || '').toLowerCase() === 'nonaktif' ? 'nonaktif' : '';
+        return '<tr><td><strong>' + escapeDashboardHtml(p.nama) + '</strong></td><td>' + escapeDashboardHtml(p.nik) + '</td><td>' + escapeDashboardHtml(p.nib) + '</td><td>' + escapeDashboardHtml(p.pasar) + '</td><td>' + escapeDashboardHtml(p.objek) + '</td><td>' + escapeDashboardHtml(p.kios) + '</td><td><span class="pedagang-status ' + status + '">' + escapeDashboardHtml(p.status || 'Belum diatur') + '</span></td></tr>';
+    }).join('');
+}
+
+function filterDashboardPedagang() {
+    const query = (document.getElementById('dashboardPedagangSearch').value || '').toLowerCase().trim();
+    const filtered = dashboardPedagangRows.filter(function (p) {
+        return [p.nama, p.nik, p.nib, p.pasar, p.objek, p.kios, p.status].join(' ').toLowerCase().indexOf(query) !== -1;
+    });
+    renderDashboardPedagang(filtered);
+    setDashboardPedagangCount(filtered.length + ' pedagang');
+}
+
+// Catat perubahan terakhir agar pengguna tahu data sudah segar.
+let dashboardPedagangLoadedAt = null;
+
+function setDashboardPedagangCount(base) {
+    const count = document.getElementById('dashboardPedagangCount');
+    if (!count) return;
+    count.dataset.base = base;
+    count.textContent = base + (dashboardPedagangLoadedAt
+        ? ' · diperbarui ' + dashboardPedagangLoadedAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+        : '');
+}
+
+// Panel Petugas mengirim pesan setelah menyimpan/menghapus data pedagang.
+window.addEventListener('message', function (event) {
+    const data = event && event.data;
+    if (!data || typeof data !== 'object') return;
+
+    if (data.type === 'NYAMAN_BELANJE_PEDAGANG_UPDATED') {
+        const notice = document.getElementById('pedagangNotice');
+        if (notice) {
+            notice.className = 'pengajuan-status show success';
+            notice.textContent = 'Perubahan dari Panel Petugas' +
+                (data.pedagang && data.pedagang.nama ? ' — ' + data.pedagang.nama : '') + ' sudah ditampilkan di bawah.';
+        }
+        loadDashboardPedagang();
+        return;
+    }
+
+    // Modul E-Retribusi baru saja menyimpan pembayaran — segarkan daftar.
+    if (data.type === 'NYAMAN_BELANJE_TRANSAKSI_UPDATED') {
+        const notice = document.getElementById('transaksiNotice');
+        if (notice) {
+            notice.className = 'pengajuan-status show success';
+            notice.textContent = 'Pembayaran baru dari Modul E-Retribusi sudah ditampilkan di bawah.';
+        }
+        loadDashboardTransaksi();
+    }
+});
+
+/* ═══ PEMBAYARAN E-RETRIBUSI ═══
+   Diisi oleh e-retribusi-pasar.html melalui Web App Apps Script
+   (aksi GET transaksi). Tab "Transaksi" dibuat otomatis saat modul pertama
+   menyimpan pembayaran — selama belum ada, panel menampilkan pesan ramah. */
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzq6OzIE6tSTijtmyo8uOJDFhkHs0ToZJX_IfnZcgCggUNjf-dyIyfo4agjnXzz4i_iA/exec';
+let dashboardTransaksiRows = [];
+let dashboardTransaksiLoadedAt = null;
+
+function formatRupiahDashboard(n) {
+    const v = Number(n);
+    if (!isFinite(v)) return '-';
+    return 'Rp' + Math.round(v).toLocaleString('id-ID');
+}
+
+async function loadDashboardTransaksi() {
+    const body = document.getElementById('dashboardTransaksiBody');
+    const count = document.getElementById('dashboardTransaksiCount');
+    const btn = document.getElementById('dashboardTransaksiRefresh');
+    if (!body) return;
+    if (btn) { btn.disabled = true; btn.textContent = 'Memuat...'; }
+    body.innerHTML = '<tr><td colspan="7" class="pedagang-empty">Memuat data pembayaran...</td></tr>';
+    if (count) count.textContent = 'Memuat...';
+
+    try {
+        if (GOOGLE_SCRIPT_URL.indexOf('TEMPEL_URL') === 0) throw new Error('Endpoint Google Apps Script belum dikonfigurasi.');
+        const response = await fetch(GOOGLE_SCRIPT_URL + '?action=transaksi', { cache: 'no-store' });
+        const text = await response.text();
+        let result;
+        try { result = JSON.parse(text); } catch (e) { throw new Error('Respons layanan tidak valid.'); }
+        if (!result.ok) throw new Error(result.error || 'Gagal memuat data pembayaran.');
+
+        dashboardTransaksiRows = Array.isArray(result.data) ? result.data : [];
+        dashboardTransaksiLoadedAt = new Date();
+
+        if (!dashboardTransaksiRows.length) {
+            body.innerHTML = '<tr><td colspan="7" class="pedagang-empty">Belum ada pembayaran e-retribusi tercatat. ' +
+                'Pembayaran pertama akan muncul di sini setelah modul E-Retribusi menyimpan transaksi.</td></tr>';
+            if (count) count.textContent = '0 pembayaran';
+            return;
+        }
+        renderDashboardTransaksi(dashboardTransaksiRows);
+        setDashboardTransaksiCount(dashboardTransaksiRows.length + ' pembayaran');
+    } catch (e) {
+        if (count) count.textContent = 'Gagal memuat';
+        body.innerHTML = '<tr><td colspan="7" class="pedagang-empty pedagang-error">' + escapeDashboardHtml(e.message) +
+            ' Bila aksi <b>transaksi</b> tidak dikenali, deploy ulang Web App dengan berkas google-apps-script-pedagang.js terbaru.</td></tr>';
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Refresh'; }
+    }
+}
+
+function renderDashboardTransaksi(rows) {
+    const body = document.getElementById('dashboardTransaksiBody');
+    if (!body) return;
+    if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="7" class="pedagang-empty">Tidak ada pembayaran yang cocok dengan pencarian.</td></tr>';
+        return;
+    }
+    body.innerHTML = rows.slice().reverse().slice(0, 100).map(function (t) {
+        const status = String(t.status || '').toLowerCase() === 'selesai' ? '' : 'nonaktif';
+        return '<tr>' +
+            '<td><strong>' + escapeDashboardHtml(t.no || '-') + '</strong></td>' +
+            '<td>' + escapeDashboardHtml(t.tanggal || '-') + '</td>' +
+            '<td>' + escapeDashboardHtml(t.nama || '-') +
+                (t.nik ? '<br><span style="font-size:11px;color:var(--slate-500);">' + escapeDashboardHtml(t.nik) + '</span>' : '') +
+            '</td>' +
+            '<td>' + escapeDashboardHtml(t.pasar || '-') + '</td>' +
+            '<td>' + escapeDashboardHtml(t.objek || t.kios || '-') +
+                (t.kios && t.objek ? '<br><span style="font-size:11px;color:var(--slate-500);">' + escapeDashboardHtml(t.kios) + '</span>' : '') +
+            '</td>' +
+            '<td>' + escapeDashboardHtml(t.metode || '-') + '</td>' +
+            '<td style="font-weight:700;color:var(--green-700);white-space:nowrap;">' + escapeDashboardHtml(formatRupiahDashboard(t.total)) + '</td>' +
+            '</tr>';
+    }).join('');
+}
+
+function filterDashboardTransaksi() {
+    const input = document.getElementById('dashboardTransaksiSearch');
+    const query = (input ? input.value : '').toLowerCase().trim();
+    const filtered = dashboardTransaksiRows.filter(function (t) {
+        return [t.no, t.nama, t.nik, t.pasar, t.kios, t.objek, t.metode, t.periode].join(' ').toLowerCase().indexOf(query) !== -1;
+    });
+    renderDashboardTransaksi(filtered);
+    setDashboardTransaksiCount(filtered.length + ' pembayaran');
+}
+
+function setDashboardTransaksiCount(base) {
+    const count = document.getElementById('dashboardTransaksiCount');
+    if (!count) return;
+    count.dataset.base = base;
+    count.textContent = base + (dashboardTransaksiLoadedAt
+        ? ' · diperbarui ' + dashboardTransaksiLoadedAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+        : '');
+}
 
 // Chart
 document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardPedagang();
+    loadDashboardTransaksi();
     const ctx = document.getElementById('serviceChart');
     if (ctx) {
         new Chart(ctx, {
