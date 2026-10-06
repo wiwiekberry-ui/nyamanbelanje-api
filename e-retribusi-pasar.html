@@ -89,6 +89,34 @@
         .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(45,181,83,0.1);}
         .form-textarea{min-height:80px;resize:vertical;}
 
+        /* LOCKED — field terisi otomatis dari NIK */
+        .form-input:disabled,.form-select:disabled,.form-textarea:disabled{background:var(--slate-100);color:var(--slate-500);border-color:var(--slate-200);cursor:not-allowed;opacity:1;}
+        .form-group.locked .form-label::after{content:' \1F512';font-size:10px;margin-left:5px;opacity:.75;}
+        .lock-wrap{position:relative;}
+        .lock-wrap .lock-ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;opacity:.55;pointer-events:none;display:none;}
+        .lock-wrap.locked .lock-ico{display:block;}
+        .lock-wrap.locked input{padding-right:34px;}
+        .nik-hint{font-size:11.5px;font-weight:600;color:var(--slate-500);line-height:1.45;}
+        .nik-hint.ok{color:var(--green-700);}
+        .nik-hint.error{color:var(--red-500);}
+        .nik-hint b{font-weight:800;}
+        .nik-hint .hint-note{display:block;font-weight:600;opacity:.85;margin-top:3px;}
+        .db-status{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--slate-500);margin-top:6px;}
+        .db-status .db-dot{width:7px;height:7px;border-radius:50%;background:var(--slate-300);flex-shrink:0;}
+        .db-status.ok{color:var(--green-700);}
+        .db-status.ok .db-dot{background:var(--green-500);box-shadow:0 0 0 3px rgba(45,181,83,.18);}
+        .db-status.off{color:var(--amber-500);}
+        .db-status.off .db-dot{background:var(--amber-500);}
+        .db-status.busy .db-dot{background:var(--blue-500);animation:pulseDot 1s ease-in-out infinite;}
+        @keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:.3;}}
+        .opt-radio{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--slate-700);cursor:pointer;user-select:none;}
+        .opt-radio input{accent-color:var(--green-600);width:16px;height:16px;cursor:pointer;margin:0;}
+        .form-radio-row{display:flex;gap:18px;flex-wrap:wrap;padding:4px 0;min-height:38px;align-items:center;}
+        .summary-box{background:var(--slate-50);border:1px solid var(--slate-100);border-radius:var(--radius-md);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+        .summary-box .s-label{font-size:12px;font-weight:600;color:var(--slate-500);}
+        .summary-box .s-value{font-size:20px;font-weight:800;color:var(--green-700);margin-top:2px;}
+        .summary-box .s-meta{font-size:12px;color:var(--slate-500);text-align:right;}
+        .summary-box .s-meta b{display:block;font-size:13px;color:var(--slate-900);margin-top:2px;}
         /* UPLOAD */
         .upload-zone{border:2px dashed var(--slate-300);border-radius:var(--radius-md);padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--slate-50);position:relative;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
         .upload-zone:hover{border-color:var(--green-500);background:var(--green-50);}
@@ -261,17 +289,13 @@
 <!-- ═══ PROGRESS ═══ -->
 <div class="progress-wrapper" id="appProgress" style="display:none;">
     <div class="progress-steps" id="progressSteps">
-        <div class="progress-step active" data-step="1"><div class="step-circle"><span>1</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Data Diri</div></div>
+        <div class="progress-step active" data-step="1" id="pstep1"><div class="step-circle"><span>1</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Data Diri</div></div>
         <div class="progress-line" id="line1"></div>
-        <div class="progress-step" data-step="2"><div class="step-circle"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Persyaratan</div></div>
+        <div class="progress-step" data-step="2" id="pstep2"><div class="step-circle"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Objek Retribusi</div></div>
         <div class="progress-line" id="line2"></div>
-        <div class="progress-step" data-step="3"><div class="step-circle"><span>3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Verifikasi</div></div>
+        <div class="progress-step" data-step="3" id="pstep3"><div class="step-circle"><span>3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Pembayaran</div></div>
         <div class="progress-line" id="line3"></div>
-        <div class="progress-step" data-step="4"><div class="step-circle"><span>4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Objek Retribusi</div></div>
-        <div class="progress-line" id="line4"></div>
-        <div class="progress-step" data-step="5"><div class="step-circle"><span>5</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Pembayaran</div></div>
-        <div class="progress-line" id="line5"></div>
-        <div class="progress-step" data-step="6"><div class="step-circle"><span>6</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Selesai</div></div>
+        <div class="progress-step" data-step="4" id="pstep4"><div class="step-circle"><span>4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-label">Selesai</div></div>
     </div>
 </div>
 
@@ -285,97 +309,64 @@
             <div class="section-desc">Lengkapi data identitas Anda sebagai pedagang atau penyewa kios di pasar Kabupaten Belitung Timur.</div>
             <div class="info-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Data yang Anda masukkan akan diverifikasi secara digital oleh koordinator layanan.</span></div>
             <div class="form-grid">
-                <div class="form-group"><label class="form-label">Nama Lengkap <span class="required">*</span></label><input class="form-input" type="text" id="namaLengkap" placeholder="Masukkan nama lengkap"></div>
-                <div class="form-group"><label class="form-label">NIK (KTP) <span class="required">*</span></label><input class="form-input" type="text" id="nik" placeholder="16 digit NIK" maxlength="16"></div>
+                <div class="form-group full"><label class="form-label">NIK — Kunci Data Pedagang <span class="required">*</span></label><div class="lock-wrap" id="nikWrap"><input class="form-input" type="text" id="nik" placeholder="16 digit NIK — data muncul otomatis" maxlength="16" inputmode="numeric" autocomplete="off"><span class="lock-ico">\1F512</span></div><span class="nik-hint" id="nikHint">Ketik NIK pedagang — Data Diri &amp; Objek Retribusi akan terisi otomatis.</span><div class="db-status" id="dbStatus"><span class="db-dot"></span>Menyambungkan ke Google Sheets…</div></div>
+                <div class="form-group"><label class="form-label">Nama Lengkap <span class="required">*</span></label><input class="form-input" type="text" id="namaLengkap" placeholder="Terisi otomatis dari NIK"></div>
                 <div class="form-group"><label class="form-label">Nomor Telepon <span class="required">*</span></label><input class="form-input" type="tel" id="telepon" placeholder="08xxxxxxxxxx"></div>
                 <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="email" placeholder="nama@email.com"></div>
-                <div class="form-group full"><label class="form-label">Alamat Lengkap <span class="required">*</span></label><textarea class="form-textarea" id="alamat" placeholder="Alamat sesuai KTP"></textarea></div>
                 <div class="form-group"><label class="form-label">NIB (Nomor Induk Berusaha) <span class="required">*</span></label><input class="form-input" type="text" id="nib" placeholder="Masukkan NIB"></div>
                 <div class="form-group"><label class="form-label">Nama Usaha <span class="required">*</span></label><input class="form-input" type="text" id="namaUsaha" placeholder="Contoh: Warung Makmur"></div>
-                <div class="form-group"><label class="form-label">Jenis Usaha <span class="required">*</span></label><select class="form-select" id="jenisUsaha"><option value="">— Pilih —</option><option value="sembako">Sembako</option><option value="sayur">Sayur & Buah</option><option value="ikan">Ikan & Seafood</option><option value="daging">Daging</option><option value="pakaian">Pakaian</option><option value="kelontong">Kelontong</option><option value="lainnya">Lainnya</option></select></div>
-                <div class="form-group"><label class="form-label">Pasar <span class="required">*</span></label><select class="form-select" id="pasar"><option value="">— Pilih Pasar —</option><option value="pasar-lipat-kajang">Pasar Lipat Kajang Manggar</option><option value="pasar-gantung">Pasar Gantung</option><option value="pasar-sukamandi">Pasar Sukamandi</option><option value="pasar-kelapa-kampit">Pasar Kelapa Kampit</option></select></div>
+                <div class="form-group"><label class="form-label">Jenis Usaha <span class="required">*</span></label><select class="form-select" id="jenisUsaha"><option value="">— Pilih —</option><option value="sembako">Sembako</option><option value="sayur">Sayur &amp; Buah</option><option value="ikan">Ikan &amp; Seafood</option><option value="daging">Daging</option><option value="pakaian">Pakaian</option><option value="kelontong">Kelontong</option><option value="lainnya">Lainnya</option></select></div>
+                <div class="form-group full"><label class="form-label">Alamat Lengkap <span class="required">*</span></label><textarea class="form-textarea" id="alamat" placeholder="Alamat sesuai KTP"></textarea></div>
             </div>
         </div>
         <div class="btn-row"><div></div><button class="btn btn-primary" onclick="goToStep(2)">Lanjutkan <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
     </div>
 
-    <!-- STEP 2 -->
+    <!-- STEP 2 — OBJEK RETRIBUSI -->
     <div class="section" id="step2">
         <div class="section-card">
-            <div class="section-title">Unggah Persyaratan Digital</div>
-            <div class="section-desc">Unggah dokumen persyaratan yang diperlukan untuk proses penarikan retribusi pasar.</div>
-            <div class="reject-banner" id="rejectBanner"><div class="reject-icon">!</div><div class="reject-content"><div class="reject-title">Dokumen Tidak Lengkap</div><div class="reject-text" id="rejectText">Beberapa dokumen belum diunggah. Silakan lengkapi persyaratan berikut.</div></div></div>
-            <div class="upload-grid">
-                <div class="form-group"><label class="form-label">KTP <span class="required">*</span></label><div class="upload-zone" id="uploadKTP" onclick="document.getElementById('fileKTP').click()"><input type="file" class="upload-input" id="fileKTP" accept=".jpg,.jpeg,.png" onchange="handleUpload(this,'uploadKTP','ktp')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadKTP','fileKTP','ktp')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><div class="upload-text">Unggah KTP</div><div class="upload-subtext">JPG, PNG (maks. 2MB)</div><div class="upload-progress" id="progressKTP"><div class="upload-progress-bar" id="barKTP"></div></div><div class="upload-error" id="errKTP"></div></div></div>
-                <div class="form-group"><label class="form-label">NIB / NIK <span class="required">*</span></label><div class="upload-zone" id="uploadNIB" onclick="document.getElementById('fileNIB').click()"><input type="file" class="upload-input" id="fileNIB" accept=".pdf,.jpg,.jpeg,.png" onchange="handleUpload(this,'uploadNIB','nib')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadNIB','fileNIB','nib')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="upload-text">Unggah NIB</div><div class="upload-subtext">PDF, JPG (maks. 2MB)</div><div class="upload-progress" id="progressNIB"><div class="upload-progress-bar" id="barNIB"></div></div><div class="upload-error" id="errNIB"></div></div></div>
-                <div class="form-group"><label class="form-label">Surat Permohonan <span class="required">*</span></label><div class="upload-zone" id="uploadSurat" onclick="document.getElementById('fileSurat').click()"><input type="file" class="upload-input" id="fileSurat" accept=".pdf,.jpg,.jpeg,.png" onchange="handleUpload(this,'uploadSurat','surat')"><button class="upload-remove" onclick="event.stopPropagation();removeUpload('uploadSurat','fileSurat','surat')">&times;</button><div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="upload-text">Unggah Surat</div><div class="upload-subtext">PDF (maks. 2MB)</div><div class="upload-progress" id="progressSurat"><div class="upload-progress-bar" id="barSurat"></div></div><div class="upload-error" id="errSurat"></div></div></div>
+            <div class="section-title">Objek Retribusi</div>
+            <div class="section-desc">Data objek terisi otomatis dari NIK pedagang dan terkunci. Tarif mengacu Perda berlaku.</div>
+            <div class="info-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Kolom bertanda 🔒 terisi otomatis dari basis data NIK dan tidak dapat diedit manual.</span></div>
+            <div class="form-grid">
+                <div class="form-group"><label class="form-label">Pilih Pasar <span class="required">*</span></label><select class="form-select" id="pasar"><option value="">— Pilih Pasar —</option><option value="pasar-lipat-kajang">Pasar Lipat Kajang Manggar</option><option value="pasar-gantung">Pasar Gantung</option><option value="pasar-sukamandi">Pasar Sukamandi</option><option value="pasar-kelapa-kampit">Pasar Kelapa Kampit</option></select></div>
+                <div class="form-group" id="jenisLapakGroup"><label class="form-label">Jenis Lapak <span class="required">*</span></label><div class="form-radio-row" id="jenisLapakRow"><label class="opt-radio"><input type="radio" name="jenisLapak" value="Kios"> Kios</label><label class="opt-radio"><input type="radio" name="jenisLapak" value="Los"> Los</label><label class="opt-radio"><input type="radio" name="jenisLapak" value="Pelataran"> Pelataran</label></div></div>
+                <div class="form-group"><label class="form-label">Nomor Lapak</label><input class="form-input" type="text" id="nomorLapak" placeholder="cth. A-102"></div>
+                <div class="form-group"><label class="form-label">Luas (m²)</label><input class="form-input" type="text" id="luas" inputmode="decimal" placeholder="m²"></div>
+                <div class="form-group"><label class="form-label">Tarif Perda (Rp/m²/hari)</label><input class="form-input" type="text" id="tarif" inputmode="decimal" value="5000" readonly></div>
+                <div class="form-group"><label class="form-label">Periode Tagihan</label><select class="form-select" id="periode"><option value="30">Bulanan</option><option value="90">Triwulan</option><option value="180">Semester</option><option value="365">Tahunan</option></select></div>
+                <div class="form-group full"><div class="summary-box"><div><div class="s-label">Nominal Retribusi</div><div class="s-value" id="nominalTagihan">Rp0</div></div><div class="s-meta">Rincian<b id="ringkasObjek">—</b></div></div></div>
             </div>
         </div>
-        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-primary" onclick="startVerification()">Kirim & Verifikasi <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-primary" id="btnToPayment" onclick="goToStep(3)">Lanjutkan ke Pembayaran <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
     </div>
 
-    <!-- STEP 3 -->
+    <!-- STEP 3 — PEMBAYARAN -->
     <div class="section" id="step3">
-        <div class="section-card">
-            <div class="verify-panel" id="verifyPanel">
-                <div class="verify-spinner" id="verifySpinner"></div>
-                <div class="verify-title" id="verifyTitle">Verifikasi Digital Awal</div>
-                <div class="verify-text" id="verifyText">Sistem sedang memeriksa kelengkapan dokumen Anda...</div>
-                <div class="verify-checks">
-                    <div class="verify-check" id="vc1"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Memeriksa data identitas pedagang</span></div>
-                    <div class="verify-check" id="vc2"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Memverifikasi dokumen & NIB</span></div>
-                    <div class="verify-check" id="vc3"><div class="verify-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>Validasi data usaha & kios</span></div>
-                </div>
-            </div>
-            <div id="verifySuccess" style="display:none;text-align:center;padding:30px 20px;"><div style="width:64px;height:64px;border-radius:50%;background:var(--green-100);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22963e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:17px;font-weight:800;margin-bottom:4px;color:var(--green-700);">Verifikasi Berhasil</div><div style="font-size:13px;color:var(--slate-500);">Dokumen dan data Anda telah lengkap. Silakan lanjutkan ke pemilihan objek retribusi.</div></div>
-            <div id="verifyReject" style="display:none;text-align:center;padding:30px 20px;"><div style="width:64px;height:64px;border-radius:50%;background:var(--red-100);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div style="font-size:17px;font-weight:800;margin-bottom:4px;color:var(--red-500);">Dokumen Tidak Lengkap</div><div style="font-size:13px;color:var(--slate-500);margin-bottom:20px;">Silakan lengkapi dokumen yang kurang dan unggah kembali.</div><button class="btn btn-primary" onclick="goToStep(2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali ke Persyaratan</button></div>
-        </div>
-        <div class="btn-row" id="step3Btns" style="display:none;"><div></div><button class="btn btn-primary" onclick="goToStep(4)">Lanjutkan <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="section" id="step4">
-        <div class="section-card">
-            <div class="section-title">Identifikasi Objek Retribusi</div>
-            <div class="section-desc">Pilih kios atau petak pasar yang Anda sewa. Retribusi akan dihitung berdasarkan jenis dan ukuran kios Anda.</div>
-            <div style="text-align:center;margin-bottom:20px;"><div class="qr-scan-area"><div class="qr-corner tl"></div><div class="qr-corner tr"></div><div class="qr-corner bl"></div><div class="qr-corner br"></div><div class="qr-scan-line"></div><div class="qr-scan-text">Arahkan ke kode QR kios</div></div><div style="font-size:11px;color:var(--slate-500);margin-top:8px;">Scan kode QR di kios Anda, atau pilih manual di bawah</div></div>
-            <div class="stall-grid">
-                <div class="stall-item" onclick="selectStall(this,'A-01',150000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios A-01 — Blok A, Lantai 1</div><div class="stall-detail">Sembako · 4m x 3m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp150.000</div></div>
-                <div class="stall-item" onclick="selectStall(this,'A-02',125000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios A-02 — Blok A, Lantai 1</div><div class="stall-detail">Sayur & Buah · 3m x 2.5m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp125.000</div></div>
-                <div class="stall-item" onclick="selectStall(this,'B-03',175000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios B-03 — Blok B, Lantai 1</div><div class="stall-detail">Ikan & Seafood · 5m x 3m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp175.000</div></div>
-                <div class="stall-item" onclick="selectStall(this,'C-07',200000)"><div class="stall-radio"></div><div class="stall-info"><div class="stall-name">Kios C-07 — Blok C, Lantai 1</div><div class="stall-detail">Daging · 5m x 4m · Pasar Lipat Kajang Manggar</div></div><div class="stall-amount">Rp200.000</div></div>
-            </div>
-        </div>
-        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-primary" id="btnToPayment" onclick="goToStep(5)" disabled>Lanjutkan ke Pembayaran <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button></div>
-    </div>
-
-    <!-- STEP 5 -->
-    <div class="section" id="step5">
         <div class="section-card">
             <div class="section-title">Pembayaran Digital Terintegrasi</div>
             <div class="section-desc">Pilih metode pembayaran dan selesaikan transaksi retribusi pasar Anda.</div>
             <div class="payment-summary">
                 <div class="payment-row"><span>Pedagang</span><span class="pay-value" id="payNama">—</span></div>
-                <div class="payment-row"><span>Kios</span><span class="pay-value" id="payKios">—</span></div>
+                <div class="payment-row"><span>Objek Retribusi</span><span class="pay-value" id="payKios">—</span></div>
                 <div class="payment-row"><span>Jenis Retribusi</span><span>Retribusi Sewa Kios Bulanan</span></div>
-                <div class="payment-row"><span>Periode</span><span class="pay-value" id="payPeriode">Agustus 2026</span></div>
+                <div class="payment-row"><span>Periode</span><span class="pay-value" id="payPeriode">Bulanan</span></div>
                 <div class="payment-row"><span>Biaya Retribusi</span><span class="pay-value" id="payAmount">—</span></div>
                 <div class="payment-row"><span>Biaya Admin</span><span>Rp2.500</span></div>
                 <div class="payment-row total"><span>Total Pembayaran</span><span class="pay-value" id="payTotal">—</span></div>
             </div>
             <div style="font-size:13px;font-weight:700;margin-bottom:12px;">Pilih Metode Pembayaran</div>
-            <div class="payment-methods">
-                <div class="payment-method" onclick="selectPayment(this,'Bank Transfer')"><div class="payment-method-icon" style="background:var(--blue-100);">🏦</div><div class="payment-method-name">Bank Transfer</div><div class="payment-method-desc">Transfer via Bank BRI / BNI / BTN</div></div>
-                <div class="payment-method" onclick="selectPayment(this,'QRIS')"><div class="payment-method-icon" style="background:var(--green-100);">📱</div><div class="payment-method-name">QRIS</div><div class="payment-method-desc">Scan QR dari semua e-wallet</div></div>
-                <div class="payment-method" onclick="selectPayment(this,'E-Wallet')"><div class="payment-method-icon" style="background:var(--amber-100);">💳</div><div class="payment-method-name">E-Wallet</div><div class="payment-method-desc">GoPay, OVO, Dana, LinkAja</div></div>
-                <div class="payment-method" onclick="selectPayment(this,'Kas Daerah')"><div class="payment-method-icon" style="background:#EDE9FE;">🏛️</div><div class="payment-method-name">Setor Kas Daerah</div><div class="payment-method-desc">Setor langsung ke kas daerah</div></div>
+            <div class="payment-methods" style="grid-template-columns:repeat(3,1fr);">
+                <div class="payment-method selected" onclick="selectPayment(this,'QRIS')"><div class="payment-method-icon" style="background:var(--green-100);">▦</div><div class="payment-method-name">QRIS</div><div class="payment-method-desc">Scan QR dari semua e-wallet &amp; m-banking</div></div>
+                <div class="payment-method" onclick="selectPayment(this,'EDC Tap Card')"><div class="payment-method-icon" style="background:var(--blue-100);">▭</div><div class="payment-method-name">EDC Tap Card</div><div class="payment-method-desc">Kartu debit/kredit tap di mesin EDC</div></div>
+                <div class="payment-method" onclick="selectPayment(this,'Virtual Account')"><div class="payment-method-icon" style="background:#EDE9FE;">🏦</div><div class="payment-method-name">Virtual Account</div><div class="payment-method-desc">Bayar via VA bank BRI / BNI / BTN</div></div>
             </div>
         </div>
-        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-blue" id="btnBayar" onclick="processPayment()" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar Sekarang</button></div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="goToStep(2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Kembali</button><button class="btn btn-blue" id="btnBayar" onclick="processPayment()" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar Sekarang</button></div>
     </div>
 
-    <!-- STEP 6 -->
-    <div class="section" id="step6">
+    <!-- STEP 4 — SELESAI -->
+    <div class="section" id="step4">
         <div class="section-card">
             <div style="text-align:center;margin-bottom:20px;"><div style="width:72px;height:72px;border-radius:50%;background:var(--green-100);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22963e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:20px;font-weight:800;color:var(--green-700);margin-bottom:4px;">Pembayaran Berhasil!</div><div style="font-size:13px;color:var(--slate-500);" id="step6Subtext">E-karcis dan bukti setor telah diterbitkan</div></div>
             <div class="receipt">
@@ -454,6 +445,480 @@ let currentTransaction = null;
 let dbRef = null, authRef = null, storageRef = null;
 const adminFee = 2500;
 
+/* ═══ SINKRON DATA PEDAGANG (Google Sheets) ═══
+   Sumber data yang sama dengan panel-petugas-edit-aktif.html — spreadsheet
+   1dmhw50fezJqVcdLDH1XdnTZVODH3g8UaTiDjdIt_3so (tab Pedagang), koneksi baca.
+   Deployment lama (...zcZihPF...) membalikkan {"data":[]} sehingga diganti
+   dengan endpoint yang sama dengan panel petugas dan terbukti mengembalikan
+   36 baris. Bila gagal diakses, sistem otomatis memakai PEDAGANG_DB di bawah.
+
+   URL yang sama juga melayani aksi `transaksi` (penyimpanan pembayaran ke
+   tab Transaksi) untuk ditampilkan di dashboard-nyaman-belanje.html.
+   Aksi itu hanya aktif setelah google-apps-script-pedagang.js di-deploy ulang;
+   sampai saat itu pembayaran diantre lokal dan terkirim otomatis. */
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzq6OzIE6tSTijtmyo8uOJDFhkHs0ToZJX_IfnZcgCggUNjf-dyIyfo4agjnXzz4i_iA/exec';
+let pedagangSheets = [];          /* cache dari Google Sheets */
+let pedagangSheetsReady = false;  /* true setelah sinkron pertama selesai */
+let _loadingSheets = false;       /* cegah permintaan ganda saat startup */
+
+async function googleRequest(action, data) {
+    if (GOOGLE_SCRIPT_URL.indexOf('TEMPEL_URL') === 0) throw new Error('URL Web App Google Sheets belum dikonfigurasi.');
+    let url = GOOGLE_SCRIPT_URL, options = { method: 'GET' };
+    if (data) { options = { method: 'POST', body: new URLSearchParams(Object.assign({ action: action }, data)) }; }
+    else { url += '?action=' + encodeURIComponent(action); }
+    const response = await fetch(url, options);
+    const text = await response.text();
+    let result;
+    try { result = JSON.parse(text); }
+    catch (e) { throw new Error('Respons Apps Script bukan JSON. Pastikan deployment Web App sudah diperbarui dan aksesnya Anyone.'); }
+    if (!result.ok) throw new Error(result.error || 'Permintaan Google Sheets gagal.');
+    return result;
+}
+
+/* ═══ INDIKATOR KONEKSI ═══ */
+function escHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+}
+function setDbStatus(state, text){
+    var el = document.getElementById('dbStatus');
+    if (!el) return;
+    el.className = 'db-status ' + (state || '');
+    el.innerHTML = '<span class="db-dot"></span>' + escHtml(text);
+}
+
+/* ═══ PENYIMPANAN TRANSAKSI PEMBAYARAN ═══
+   Setiap pembayaran dikirim ke tab "Transaksi" di spreadsheet sehingga
+   dashboard-nyaman-belanje.html dapat menampilkannya. Bila pengiriman gagal
+   (jaringan mati / Web App belum di-deploy ulang), transaksi disimpan di
+   localStorage dan dikirim ulang otomatis pada kunjungan berikutnya.
+
+   Backend sifatnya idempoten — nomor transaksi sama tidak diduplikasi —
+   sehingga pengiriman ulang aman. */
+const ANTREAN_KEY = 'nyaman_retribusi_antrean_v1';
+
+function bacaAntreanTransaksi(){
+    try {
+        var raw = localStorage.getItem(ANTREAN_KEY);
+        var arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+}
+
+function tulisAntreanTransaksi(arr){
+    try {
+        if (!arr.length) localStorage.removeItem(ANTREAN_KEY);
+        else localStorage.setItem(ANTREAN_KEY, JSON.stringify(arr));
+    } catch (e) { /* localStorage diblokir (file:// di sebagian browser) — abaikan */ }
+}
+
+/* Kirim satu transaksi. true = tersimpan, false = masuk antrean. */
+async function simpanTransaksi(trx){
+    if (!trx || !trx.no) return false;
+    var payload = {
+        no: trx.no,
+        tanggal: trx.tanggal || '',
+        nik: String(trx.nik || '').replace(/\D/g, ''),
+        nama: trx.nama || '',
+        pasar: trx.pasar || '',
+        kios: trx.kios || '',
+        lapak: trx.lapak || '',
+        objek: trx.objek || '',
+        periode: trx.periode || '',
+        retribusi: trx.retribusi || 0,
+        admin: trx.admin || 0,
+        total: trx.total || 0,
+        metode: trx.metode || '',
+        status: trx.status || 'Selesai'
+    };
+    try {
+        await googleRequest('transaksi', payload);
+        return true;
+    } catch (e) {
+        var antrean = bacaAntreanTransaksi();
+        var sudahAda = antrean.some(function(x){ return x.no === payload.no; });
+        if (!sudahAda) antrean.push(payload);
+        tulisAntreanTransaksi(antrean);
+        console.warn('Transaksi diantre lokal:', e.message);
+        return false;
+    }
+}
+
+/* Kirim ulang transaksi yang tertunda — dipanggil saat halaman dibuka. */
+async function kirimAntreanTransaksi(){
+    var antrean = bacaAntreanTransaksi();
+    if (!antrean.length) return;
+    var tersisa = [];
+    for (var i = 0; i < antrean.length; i++) {
+        var ok = await simpanTransaksi(antrean[i]);
+        if (!ok) tersisa.push(antrean[i]);
+    }
+    tulisAntreanTransaksi(tersisa);
+    if (!tersisa.length && typeof showToast === 'function') {
+        showToast('success', antrean.length + ' pembayaran tertunda berhasil dikirim ke spreadsheet.');
+    }
+    beritahuDashboard({ type: 'NYAMAN_BELANJE_TRANSAKSI_UPDATED' });
+}
+
+/* Beri tahu tab dashboard (bila terbuka bersamaan) untuk memuat ulang data. */
+function beritahuDashboard(msg){
+    try {
+        if (window.parent && window.parent !== window) window.parent.postMessage(msg, '*');
+        if (window.opener && !window.opener.closed) window.opener.postMessage(msg, '*');
+    } catch (e) { /* silang-origin/refresh — abaikan */ }
+}
+
+/* Muat daftar pedagang — dipanggil sekali saat halaman dibuka. */
+async function loadPedagangFromGoogle() {
+    if (_loadingSheets) return;
+    _loadingSheets = true;
+    setDbStatus('busy', 'Menyambungkan ke Google Sheets…');
+    try {
+        const result = await googleRequest('list');
+        pedagangSheets = Array.isArray(result.data) ? result.data : [];
+        pedagangSheetsReady = true;
+        setDbStatus('ok', 'Tersambung — ' + pedagangSheets.length + ' pedagang dari Google Sheets');
+        /* Jika NIK sudah diketisi sebelum data sampai, ulangi pencarian. */
+        var nikEl = document.getElementById('nik');
+        if (nikEl && nikEl.value.replace(/\D/g, '').length === 16) cariNIK();
+    } catch (e) {
+        pedagangSheetsReady = false;
+        setDbStatus('off', 'Tidak tersambung — memakai ' + Object.keys(PEDAGANG_DB).length + ' data lokal');
+        console.warn('Sinkron data pedagang gagal, memakai data lokal:', e.message);
+    } finally {
+        _loadingSheets = false;
+    }
+}
+
+/* ═══ PEMETAAN KOLOM GOOGLE SHEETS → FORM E-RETRIBUSI ═══
+   Judul kolom di spreadsheet:
+   ID | Nama | NIK | No. HP | Email | Lokasi Pasar | NIB | Objek Retribusi |
+   Nomor Kios | Jenis Usaha | Status | Alamat | Diperbarui                */
+const PASAR_SHEET_MAP = {
+    'pasar lipat kajang': 'pasar-lipat-kajang',
+    'pasar lipat kajang manggar': 'pasar-lipat-kajang',
+    'pasar manggar': 'pasar-lipat-kajang',
+    'pasar gantung': 'pasar-gantung',
+    'pasar sukamandi': 'pasar-sukamandi',
+    'pasar kelapa kampit': 'pasar-kelapa-kampit',
+    'pasar tradisional lainnya': 'pasar-kelapa-kampit'
+};
+const PASAR_VALUES = ['pasar-lipat-kajang', 'pasar-gantung', 'pasar-sukamandi', 'pasar-kelapa-kampit'];
+const JENIS_USAHA_MAP = [
+    ['sembako', ['sembako', 'bahan pokok', 'beras']],
+    ['sayur', ['sayur', 'buah', 'hasil bumi']],
+    ['ikan', ['ikan', 'seafood', 'udang']],
+    ['daging', ['daging', 'ayam', 'sapi']],
+    ['pakaian', ['pakaian', 'tekstil', 'busana']],
+    ['kelontong', ['kelontong', 'toko', 'warung']]
+];
+
+function mapPasar(value) {
+    var key = String(value == null ? '' : value).toLowerCase().replace(/\s+/g, ' ').trim();
+    if (!key) return '';
+    if (PASAR_SHEET_MAP[key]) return PASAR_SHEET_MAP[key];
+    if (PASAR_VALUES.indexOf(key) !== -1) return key;
+    var found = '';
+    Object.keys(PASAR_SHEET_MAP).forEach(function (k) {
+        if (found) return;
+        if (key.indexOf(k) !== -1 || k.indexOf(key) !== -1) found = PASAR_SHEET_MAP[k];
+    });
+    /* Nilai bebas di luar daftar → biarkan kosong agar petugas memilih manual. */
+    return found;
+}
+
+function mapJenisUsaha(usahaText) {
+    var key = String(usahaText == null ? '' : usahaText).toLowerCase();
+    if (!key) return '';
+    var hasil = '';
+    JENIS_USAHA_MAP.forEach(function (entry) {
+        if (hasil) return;
+        if (entry[1].some(function (kata) { return key.indexOf(kata) !== -1; })) hasil = entry[0];
+    });
+    return hasil; /* kosong = petugas memilih sendiri */
+}
+
+/* Alamat di spreadsheet sebagian berisi tautan Google Drive (unggahan
+   dokumen, bukan alamat) — jangan tampilkan sebagai alamat. */
+function bersihAlamat(v) {
+    var t = String(v == null ? '' : v).trim();
+    if (!t) return '';
+    if (/https?:\/\//i.test(t) || /drive\.google\.com/i.test(t)) return '';
+    return t;
+}
+
+/* Desimal ditulis dengan koma di spreadsheet, sedangkan parseAngka()
+   menganggap titik sebagai pemisah ribuan ("2.5" → 25). */
+function fmtDesimal(n) {
+    return String(Math.round(n * 100) / 100).replace('.', ',');
+}
+
+/* ═══ URAI KOLOM "Objek Retribusi" ═══
+   Contoh nilai: "Kios/Toko - 9 m2-12 m2", "Los/Plank - Ukuran sampai
+   dengan 2,5 m2", "Pelataran/Amparan - Gerobak".
+   Menghasilkan jenis lapak (Kios/Los/Pelataran) dan luas dalam m². */
+function parseObjekRetribusi(teks, kios) {
+    var hasil = { jenisLapak: '', luas: '', catatan: '' };
+    var t = String(teks == null ? '' : teks).trim().toLowerCase();
+
+    if (t) {
+        /* 1) Jenis lapak dari frasa sebelum tanda hubung. */
+        if (/(kios|toko)/.test(t)) hasil.jenisLapak = 'Kios';
+        else if (/(pelataran|amparan)/.test(t)) hasil.jenisLapak = 'Pelataran';
+        else if (/(los|plank|lesehan)/.test(t)) hasil.jenisLapak = 'Los';
+
+        /* 2) Luas dari bagian ukurannya (buang satuan "m2"/"m²" dulu). */
+        var potong = t.split('-');
+        var ukuran = potong.length > 1 ? potong.slice(1).join('-') : t;
+        ukuran = ukuran.replace(/m\s*(²|2)/g, ' ');
+        var angka = (ukuran.match(/\d+(?:[.,]\d+)?/g) || [])
+            .map(function (x) { return parseFloat(x.replace(',', '.')); })
+            .filter(function (x) { return isFinite(x) && x > 0 && x < 1000; });
+        if (angka.length === 1) {
+            hasil.luas = fmtDesimal(angka[0]);
+        } else if (angka.length > 1) {
+            var kecil = Math.min.apply(null, angka), besar = Math.max.apply(null, angka);
+            hasil.luas = fmtDesimal(kecil);
+            hasil.catatan = 'Luas diambil dari rentang ' + fmtDesimal(kecil) + '–'
+                + fmtDesimal(besar) + ' m² (batas bawah).';
+        }
+    }
+
+    /* 3) Cadangan: tebak jenis lapak dari awalan nomor kios bila kolom
+          Objek Retribusi kosong ("K.21"→Kios, "Los 12"→Los, "G. 12"→Pelataran). */
+    if (!hasil.jenisLapak && kios) {
+        var a = String(kios).trim().charAt(0).toLowerCase();
+        if (a === 'k') hasil.jenisLapak = 'Kios';
+        else if (a === 'l') hasil.jenisLapak = 'Los';
+        else if (a === 'g' || a === 'p') hasil.jenisLapak = 'Pelataran';
+    }
+    return hasil;
+}
+
+/* Susun record berbentuk kolom formulir — dipakai sumber Google Sheets
+   maupun data lokal agar pengisian dan penguncian memakai id yang sama. */
+function toFormRecord(b, sumber) {
+    if (!b) return null;
+    var nama = String(b.nama == null ? '' : b.nama).trim();
+    var telp = String(b.telp == null ? '' : b.telp).trim();
+    var usaha = String(b.usaha == null ? '' : b.usaha).trim();
+    return {
+        id: b.id || '',
+        nama: nama,
+        namaLengkap: nama,
+        telp: telp,
+        telepon: telp,
+        email: String(b.email == null ? '' : b.email).trim(),
+        alamat: String(b.alamat == null ? '' : b.alamat).trim(),
+        nib: String(b.nib == null ? '' : b.nib).trim(),
+        usaha: usaha,
+        namaUsaha: usaha,
+        jenisUsaha: b.jenisUsaha || '',
+        pasar: b.pasar || '',
+        jenisLapak: b.jenisLapak || '',
+        nomorLapak: String(b.nomorLapak == null ? '' : b.nomorLapak).trim(),
+        luas: b.luas == null ? '' : String(b.luas),
+        objekRaw: String(b.objekRaw == null ? '' : b.objekRaw).trim(),
+        luasCatatan: b.luasCatatan || '',
+        status: String(b.status == null ? '' : b.status).trim(),
+        sumber: sumber
+    };
+}
+
+/* Ubah satu baris Google Sheets menjadi record setara formulir. */
+function normalizeSheetRow(p) {
+    if (!p) return null;
+    var nik = String(p.nik == null ? '' : p.nik).replace(/\D/g, '');
+    /* NIK yang bukan 16 digit (mis. tersimpan notasi ilmiah "1,91E+20")
+       tidak akan pernah cocok dengan input 16 digit — lewati baris ini. */
+    if (nik.length !== 16) return null;
+    var objek = parseObjekRetribusi(p.objek, p.kios);
+    return toFormRecord({
+        id: p.id,
+        nama: p.nama,
+        telp: p.hp,                 /* kolom "No. HP" */
+        email: p.email,
+        alamat: bersihAlamat(p.alamat),
+        nib: p.nib,                 /* kolom "NIB" */
+        usaha: p.usaha,             /* kolom "Jenis Usaha" → saran Nama Usaha */
+        jenisUsaha: mapJenisUsaha(p.usaha),
+        pasar: mapPasar(p.pasar),   /* kolom "Lokasi Pasar" */
+        jenisLapak: objek.jenisLapak,
+        nomorLapak: p.kios,         /* kolom "Nomor Kios" */
+        luas: objek.luas,
+        objekRaw: p.objek,          /* kolom "Objek Retribusi" (mentah) */
+        luasCatatan: objek.catatan,
+        status: p.status
+    }, 'Google Sheets');
+}
+
+function cariPedagangByNIK(nik) {
+    var key = String(nik == null ? '' : nik).replace(/\D/g, '');
+    if (!key) return null;
+    /* 1. Prioritas: data terbaru dari Google Sheets */
+    for (var i = 0; i < pedagangSheets.length; i++) {
+        var sheetNik = String(pedagangSheets[i].nik == null ? '' : pedagangSheets[i].nik).replace(/\D/g, '');
+        if (sheetNik === key) {
+            var rec = normalizeSheetRow(pedagangSheets[i]);
+            if (rec) return rec;
+        }
+    }
+    /* 2. Fallback: data demo lokal */
+    if (PEDAGANG_DB[key]) return toFormRecord(PEDAGANG_DB[key], 'Data lokal');
+    return null;
+}
+/* ═══ DATABASE PEDAGANG (DEMO) — KEY: NIK ═══
+   Dipakai sebagai cadangan bila Google Sheets tidak dapat diakses. */
+const PEDAGANG_DB = {
+    "108325303760012": { nama:"Budi Santoso", telp:"0812123456789", email:"budi.santoso@mail.id", alamat:"Jl. Melati No. 12, Manggar", nib:"0220304561234", usaha:"Warung Makmur", jenisUsaha:"sembako", pasar:"pasar-lipat-kajang", jenisLapak:"Kios", nomorLapak:"A-102", luas:"12" },
+    "3374012509800003": { nama:"Siti Aminah", telp:"0813987654321", email:"siti.aminah@mail.id", alamat:"Jl. Kenanga No. 5, Gantung", nib:"0220304561887", usaha:"Sayur Segar Siti", jenisUsaha:"sayur", pasar:"pasar-gantung", jenisLapak:"Los", nomorLapak:"L-07", luas:"8" },
+    "3374025507750004": { nama:"Hendra Wijaya", telp:"0857445112334", email:"hendra.w@mail.id", alamat:"Jl. Merdeka No. 3, Sukamandi", nib:"0220304561999", usaha:"Seafood Segar", jenisUsaha:"ikan", pasar:"pasar-sukamandi", jenisLapak:"Pelataran", nomorLapak:"P-15", luas:"20" },
+    "3374030301900005": { nama:"Rina Kurnia", telp:"0821336778901", email:"rina.kurnia@mail.id", alamat:"Jl. Anggrek No. 8, Kelapa Kampit", nib:"0220304561555", usaha:"Kelontong Rina", jenisUsaha:"kelontong", pasar:"pasar-kelapa-kampit", jenisLapak:"Kios", nomorLapak:"A-21", luas:"10" }
+};
+
+/* ═══ HELPER ═══ */
+function parseAngka(str){
+    var x = parseFloat(String(str == null ? "" : str).replace(/[^\d.,]/g, "").replace(/\./g, "").replace(",", "."));
+    return isFinite(x) && x > 0 ? x : 0;
+}
+function setRadioJenis(v){
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){ r.checked = (r.value === v); });
+}
+function getRadioJenis(){
+    var x = document.querySelector('input[name="jenisLapak"]:checked');
+    return x ? x.value : "";
+}
+function kunciField(el, lock){
+    el.disabled = lock;
+    var grp = el.closest ? el.closest('.form-group') : null;
+    if (grp) grp.classList.toggle('locked', lock);
+    if (el.id === 'nik'){
+        var w = document.getElementById('nikWrap');
+        if (w) w.classList.toggle('locked', lock);
+        el.readOnly = lock;
+    }
+}
+function setHint(cls, text){
+    var h = document.getElementById('nikHint');
+    if (!h) return;
+    h.className = 'nik-hint ' + (cls || '');
+    h.innerHTML = text;
+}
+function hitungRetribusi(){
+    var luas = parseAngka((document.getElementById('luas')||{}).value);
+    var tarif = parseAngka((document.getElementById('tarif')||{}).value);
+    var sel = document.getElementById('periode');
+    var hari = (sel && parseAngka(sel.value)) || 30;
+    var nominal = Math.round(luas * tarif * hari);
+    var nominalEl = document.getElementById('nominalTagihan');
+    if (nominalEl) nominalEl.textContent = formatRupiah(nominal);
+    var jenis = getRadioJenis() || '—';
+    var ring = document.getElementById('ringkasObjek');
+    if (ring) ring.textContent = jenis + ' · ' + (luas ? luas : '–') + ' m² · ' + hari + ' hari × ' + formatRupiah(tarif) + '/m²/hari';
+    return nominal;
+}
+
+/* ═══ LOCK / UNLOCK FIELD HASIL OTOMATIS ═══ */
+var AUTO_FIELDS = ['namaLengkap', 'telepon', 'email', 'alamat', 'nib', 'namaUsaha', 'pasar', 'nomorLapak', 'luas'];
+/* Kolom yang boleh dikunci otomatis. 'namaUsaha' sengaja dikecualikan:
+   spreadsheet tidak memiliki kolom nama usaha — nilainya disarankan dari
+   kolom Jenis Usaha dan tetap boleh diperbaiki pedagang. */
+var LOCKABLE_FIELDS = ['namaLengkap', 'telepon', 'email', 'alamat', 'nib', 'pasar', 'nomorLapak', 'luas'];
+function setAutoLock(lock){
+    AUTO_FIELDS.forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) kunciField(el, lock);
+    });
+    document.getElementById('jenisUsaha') && kunciField(document.getElementById('jenisUsaha'), lock);
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){
+        r.disabled = lock;
+        var lbl = r.closest ? r.closest('.opt-radio') : null;
+        if (lbl) lbl.style.opacity = lock ? '.55' : '';
+        if (lbl) lbl.style.cursor = lock ? 'not-allowed' : 'pointer';
+    });
+    var grp = document.getElementById('jenisLapakGroup');
+    if (grp) grp.classList.toggle('locked', lock);
+}
+
+/* ═══ LOOKUP NIK → ISI OTOMATIS (KOLOM TERISI DIKUNCI) ═══ */
+var _nikTimer = null;
+function cariNIK(){
+    var key = (document.getElementById('nik').value || '').replace(/\D/g, '');
+    if (key.length === 0){ setHint('', 'Ketik NIK pedagang — Data Diri &amp; Objek Retribusi akan terisi otomatis.'); setAutoLock(false); return; }
+    if (key.length < 16){ setHint('', 'NIK belum lengkap (' + key.length + '/16 digit).'); setAutoLock(false); return; }
+    var d = cariPedagangByNIK(key);
+    if (!d){
+        setAutoLock(false);
+        ['namaLengkap', 'telepon', 'email', 'alamat', 'nib', 'namaUsaha'].forEach(function(id){ var e = document.getElementById(id); if (e) e.value = ''; });
+        document.getElementById('jenisUsaha').value = '';
+        document.getElementById('pasar').value = '';
+        ['nomorLapak', 'luas'].forEach(function(id){ var e = document.getElementById(id); if (e) e.value = ''; });
+        document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){ r.checked = false; });
+        hitungRetribusi();
+        setHint('error', pedagangSheetsReady
+            ? '<b>NIK tidak ditemukan.</b> Kolom terbuka — silakan isi data manual.'
+            : '<b>NIK tidak ditemukan di data lokal.</b> Sinkron Google Sheets belum tersambung — kolom terbuka untuk diisi manual.');
+        showToast('error', 'NIK ' + key + ' belum terdaftar di basis data');
+        return;
+    }
+    /* Isi otomatis — kunci objek = id kolom formulir. */
+    var isi = {
+        namaLengkap: d.namaLengkap, telepon: d.telepon, email: d.email,
+        alamat: d.alamat, nib: d.nib, namaUsaha: d.namaUsaha,
+        jenisUsaha: d.jenisUsaha || '', pasar: d.pasar || '',
+        nomorLapak: d.nomorLapak, luas: d.luas
+    };
+    Object.keys(isi).forEach(function(id){
+        var e = document.getElementById(id);
+        if (e) e.value = isi[id] || '';
+    });
+    /* Jenis lapak: hasil uraian kolom "Objek Retribusi" (atau awalan kios). */
+    var adaLapak = false;
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){
+        r.checked = !!(d.jenisLapak && r.value === d.jenisLapak);
+        if (r.checked) adaLapak = true;
+    });
+    /* Kunci kolom yang terisi; kolom kosong tetap terbuka untuk dilengkapi. */
+    setAutoLockFromRecord(d, adaLapak);
+    hitungRetribusi();
+
+    var sumber = d.sumber === 'Google Sheets' ? 'Google Sheets' : 'data lokal';
+    var kosong = AUTO_FIELDS.filter(function(id){ var e = document.getElementById(id); return e && !String(e.value).trim(); });
+    if (!adaLapak) kosong.push('jenisLapak');
+    var msg = '<b>✓ ' + escHtml(d.namaLengkap) + '</b> — terisi otomatis dari ' + sumber + '. '
+        + (kosong.length
+            ? kosong.length + ' kolom belum tersedia, silakan lengkapi manual.'
+            : 'Seluruh kolom terkunci otomatis.');
+    var catatan = [];
+    if (d.objekRaw) catatan.push('Objek Retribusi: ' + escHtml(d.objekRaw));
+    if (d.luasCatatan) catatan.push(escHtml(d.luasCatatan));
+    if (d.status && d.status.toLowerCase() !== 'aktif') catatan.push('Status di sheet: ' + escHtml(d.status));
+    setHint('ok', msg + (catatan.length ? '<span class="hint-note">' + catatan.join(' · ') + '</span>' : ''));
+    showToast('success', 'Data pedagang ditemukan: ' + d.namaLengkap);
+}
+
+/* Kunci per kolom — kolom tanpa nilai dibiarkan terbuka. */
+function setAutoLockFromRecord(d, lapakTerkunci){
+    LOCKABLE_FIELDS.forEach(function(id){
+        var e = document.getElementById(id);
+        if (!e) return;
+        kunciField(e, !!String(d[id] || '').trim());
+    });
+    /* Nama usaha: diisi saran, tetap terbuka untuk diperbaiki pedagang. */
+    var nU = document.getElementById('namaUsaha');
+    if (nU) kunciField(nU, false);
+    var jU = document.getElementById('jenisUsaha');
+    if (jU) kunciField(jU, !!d.jenisUsaha);
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){
+        r.disabled = !lapakTerkunci;
+        var lbl = r.closest ? r.closest('.opt-radio') : null;
+        if (lbl) lbl.style.opacity = lapakTerkunci ? '.55' : '';
+        if (lbl) lbl.style.cursor = lapakTerkunci ? 'not-allowed' : 'pointer';
+    });
+    var grp = document.getElementById('jenisLapakGroup');
+    if (grp) grp.classList.toggle('locked', lapakTerkunci);
+}
 /* ═══ FIREBASE INIT (jika aktif) ═══ */
 let firebaseReady = false;
 
@@ -492,6 +957,11 @@ if (firebaseReady) {
     pedagangId = currentUser.uid;
     enterApp('Mode Demo');
 }
+/* Sinkron data pedagang terbaru dari sumber yang sama dengan panel petugas.
+   Aplikasi tetap berfungsi menggunakan PEDAGANG_DB bila jaringan gagal. */
+loadPedagangFromGoogle();
+/* Kirim pembayaran yang sempat tertunda sebelumnya ke spreadsheet. */
+kirimAntreanTransaksi();
 
 function enterApp(displayName) {
     document.getElementById('loginOverlay').classList.add('hidden');
@@ -581,9 +1051,10 @@ async function doLogout() {
 }
 
 /* ═══ NAVIGASI ═══ */
+const TOTAL_STEPS = 4;
 function goToStep(step) {
-    if (step === 2 && !validateStep1()) return;
-    if (step === 5 && !selectedStall) return;
+    if (step === 2 && currentStep === 1 && !validateStep1()) return;
+    if (step === 3 && currentStep === 2 && !validateStep2()) return;
     currentStep = step;
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + step).classList.add('active');
@@ -593,205 +1064,54 @@ function goToStep(step) {
         if (n < step) s.classList.add('done');
         else if (n === step) s.classList.add('active');
     });
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i < TOTAL_STEPS; i++) {
         const l = document.getElementById('line' + i);
         if (l) l.classList.toggle('active', i < step);
     }
-    if (step === 5) populatePayment();
-    if (step === 2) {
-        syncUploadStateFromInputs();
-        document.getElementById('rejectBanner').classList.remove('show');
-    }
+    if (step === 3) { if (!selectedStall) selectedStall = { kios: (document.getElementById('nomorLapak').value || '—'), amount: hitungRetribusi() }; populatePayment(); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* Langkah 1 — hanya kolom di layar "Data Diri Pedagang". */
 function validateStep1() {
-    const required = [{ id: 'namaLengkap', l: 'Nama Lengkap' }, { id: 'nik', l: 'NIK' }, { id: 'telepon', l: 'Telepon' }, { id: 'alamat', l: 'Alamat' }, { id: 'nib', l: 'NIB' }, { id: 'namaUsaha', l: 'Nama Usaha' }, { id: 'jenisUsaha', l: 'Jenis Usaha' }, { id: 'pasar', l: 'Pasar' }];
+    var nikVal = (document.getElementById('nik').value || '').replace(/\D/g, '');
+    if (nikVal.length !== 16) { showToast('error', 'NIK harus 16 digit — NIK adalah kunci data pedagang'); document.getElementById('nik').focus(); return false; }
+    const required = [{ id: 'namaLengkap', l: 'Nama Lengkap' }, { id: 'telepon', l: 'Telepon' }, { id: 'alamat', l: 'Alamat' }, { id: 'nib', l: 'NIB' }, { id: 'namaUsaha', l: 'Nama Usaha' }, { id: 'jenisUsaha', l: 'Jenis Usaha' }, { id: 'pasar', l: 'Pasar' }];
     for (const r of required) {
         const e = document.getElementById(r.id);
         if (!e.value.trim()) { showToast('error', r.l + ' wajib diisi'); e.focus(); e.style.borderColor = '#DC2626'; setTimeout(() => e.style.borderColor = '', 2000); return false; }
     }
-    if (document.getElementById('nik').value.length !== 16) { showToast('error', 'NIK harus 16 digit'); return false; }
     return true;
 }
 
-/* ═══ UPLOAD ═══ */
-function handleUpload(input, zoneId, docType) {
-    try {
-        var zone = document.getElementById(zoneId);
-        var file = input && input.files ? input.files[0] : null;
-        if (!zone || !file) return;
-
-        var maxSize = 2 * 1024 * 1024;
-        var errId = 'err' + docType.charAt(0).toUpperCase() + docType.slice(1);
-        var errEl = document.getElementById(errId);
-        if (file.size > maxSize) {
-            if (errEl) {
-                errEl.textContent = 'Ukuran file maks. 2MB (' + (file.size / 1024 / 1024).toFixed(1) + 'MB)';
-                errEl.style.display = 'block';
-            }
-            input.value = '';
-            return;
-        }
-        if (errEl) {
-            errEl.textContent = '';
-            errEl.style.display = 'none';
-        }
-
-        var rejectBanner = document.getElementById('rejectBanner');
-        if (rejectBanner) rejectBanner.classList.remove('show');
-
-        uploadedDocs[docType] = true;
-        uploadedFiles[docType] = { key: null, name: file.name, size: file.size, local: true };
-        zone.classList.add('uploaded');
-        var uploadText = zone.querySelector('.upload-text');
-        var uploadSubtext = zone.querySelector('.upload-subtext');
-        var uploadIcon = zone.querySelector('.upload-icon');
-        if (uploadText) uploadText.textContent = docType.toUpperCase() + ' — Tersedia';
-        if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ')';
-        if (uploadIcon) uploadIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-        showToast('success', docType.toUpperCase() + ' berhasil diunggah');
-
-        var recordId = pedagangId || 'e-ret-' + Date.now();
-        uploadToKilat(file, 'e-retribusi', recordId).then(function(kilatResult) {
-            uploadedFiles[docType] = { key: kilatResult.key, name: file.name, size: file.size, contentType: kilatResult.contentType };
-            if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ' — disimpan di Kilat)';
-        }).catch(function(error) {
-            if (uploadSubtext) uploadSubtext.textContent = file.name + ' (' + formatSize(file.size) + ' — disimpan lokal)';
-            console.error('Upload Kilat gagal:', error);
-        });
-    } catch (e) {
-        console.error('handleUpload error:', e);
-        showToast('error', 'Upload error: ' + e.message);
+/* Langkah 2 — kolom objek retribusi (luas & jenis lapak diisi di sini). */
+function validateStep2() {
+    const required = [{ id: 'nomorLapak', l: 'Nomor Lapak' }, { id: 'luas', l: 'Luas lapak (m²)' }];
+    for (const r of required) {
+        const e = document.getElementById(r.id);
+        if (!e.value.trim()) { showToast('error', r.l + ' wajib diisi'); e.focus(); e.style.borderColor = '#DC2626'; setTimeout(() => e.style.borderColor = '', 2000); return false; }
     }
-}
-
-function removeUpload(zoneId, fileId, docType) {
-    const zone = document.getElementById(zoneId);
-    document.getElementById(fileId).value = '';
-    zone.classList.remove('uploaded', 'uploading');
-    const labels = { ktp: ['Unggah KTP', 'JPG, PNG (maks. 2MB)'], nib: ['Unggah NIB', 'PDF, JPG (maks. 2MB)'], surat: ['Unggah Surat', 'PDF (maks. 2MB)'] };
-    zone.querySelector('.upload-text').textContent = labels[docType][0];
-    zone.querySelector('.upload-subtext').textContent = labels[docType][1];
-    const svgMap = { ktp: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>', nib: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>', surat: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>' };
-    zone.querySelector('.upload-icon').innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + svgMap[docType] + '</svg>';
-    const progWrap = document.getElementById('progress' + docType.charAt(0).toUpperCase() + docType.slice(1));
-    if (progWrap) progWrap.style.display = 'none';
-    uploadedDocs[docType] = false;
-    uploadedFiles[docType] = null;
-}
-
-function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1048576) return Math.round(bytes / 1024 * 10) / 10 + ' KB';
-    return Math.round(bytes / 1048576 * 10) / 10 + ' MB';
-}
-
-/* ═══ VERIFIKASI ═══ */
-function syncUploadStateFromInputs() {
-    const inputMap = { ktp: 'fileKTP', nib: 'fileNIB', surat: 'fileSurat' };
-    for (const [docType, inputId] of Object.entries(inputMap)) {
-        const input = document.getElementById(inputId);
-        if (input && input.files && input.files.length > 0 && !uploadedDocs[docType]) {
-            uploadedDocs[docType] = true;
-            uploadedFiles[docType] = { key: null, name: input.files[0].name, size: input.files[0].size, local: true };
-        }
-    }
-}
-
-function startVerification() {
-    syncUploadStateFromInputs();
-    const missing = Object.entries(uploadedDocs).filter(([, ok]) => !ok).map(([key]) => key.toUpperCase());
-    if (missing.length) {
-        showToast('error', 'Dokumen belum lengkap: ' + missing.join(', '));
-        document.getElementById('rejectText').textContent = 'Dokumen belum lengkap: ' + missing.join(', ') + '. Silakan unggah kembali.';
-        document.getElementById('rejectBanner').classList.add('show');
-        return;
-    }
-    const allUploaded = true;
-    goToStep(3);
-
-    const sp = document.getElementById('verifySpinner'), pn = document.getElementById('verifyPanel');
-    const sc = document.getElementById('verifySuccess'), sr = document.getElementById('verifyReject');
-    const sb = document.getElementById('step3Btns');
-    sp.style.display = 'block'; sc.style.display = 'none'; sr.style.display = 'none'; sb.style.display = 'none';
-    pn.querySelector('.verify-title').style.display = '';
-    pn.querySelector('.verify-text').style.display = '';
-    pn.querySelector('.verify-checks').style.display = '';
-
-    // Update check labels based on mode
-    document.querySelectorAll('#vc1 span, #vc2 span, #vc3 span').forEach((s, i) => {
-        const labels = firebaseReady
-            ? ['Menyimpan data pedagang ke Firestore', 'Memverifikasi dokumen & NIB', 'Validasi data usaha & kios']
-            : ['Memeriksa data identitas pedagang', 'Memverifikasi dokumen & NIB', 'Validasi data usaha & kios'];
-        s.textContent = labels[i];
-    });
-
-    let i = 0;
-    const iv = setInterval(async () => {
-        if (i < 3) {
-            document.getElementById('vc' + (i + 1)).classList.add('done');
-
-            // Simpan ke Firestore jika Firebase aktif
-            if (i === 0 && firebaseReady && dbRef && pedagangId) {
-                try {
-                    const docUrls = {};
-                    for (const [k, v] of Object.entries(uploadedFiles)) {
-                        if (v && typeof v === 'object' && v.downloadUrl) {
-                            docUrls[k] = { name: v.name, storagePath: v.storagePath, downloadUrl: v.downloadUrl };
-                        }
-                    }
-                    await dbRef.collection('pedagang').doc(pedagangId).set({
-                        nama: document.getElementById('namaLengkap').value,
-                        nik: document.getElementById('nik').value,
-                        telepon: document.getElementById('telepon').value,
-                        email: document.getElementById('email').value,
-                        alamat: document.getElementById('alamat').value,
-                        nib: document.getElementById('nib').value,
-                        namaUsaha: document.getElementById('namaUsaha').value,
-                        jenisUsaha: document.getElementById('jenisUsaha').value,
-                        pasar: document.getElementById('pasar').value,
-                        dokumen: docUrls,
-                        statusVerifikasi: allUploaded ? 'lengkap' : 'tidak_lengkap',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                } catch (e) { console.error('Gagal simpan ke Firestore:', e); }
-            }
-            i++;
-        } else {
-            clearInterval(iv);
-            setTimeout(() => {
-                sp.style.display = 'none';
-                pn.querySelector('.verify-title').style.display = 'none';
-                pn.querySelector('.verify-text').style.display = 'none';
-                pn.querySelector('.verify-checks').style.display = 'none';
-                if (allUploaded) {
-                    sc.style.display = 'block'; sb.style.display = 'flex';
-                    showToast('success', 'Verifikasi berhasil' + (firebaseReady ? ' — data tersimpan di Firestore' : ''));
-                } else {
-                    sr.style.display = 'block';
-                    document.getElementById('rejectBanner').classList.add('show');
-                    showToast('error', 'Verifikasi gagal — dokumen tidak lengkap');
-                }
-            }, 400);
-        }
-    }, 700);
+    if (parseAngka(document.getElementById('luas').value) <= 0) { showToast('error', 'Luas lapak harus berupa angka lebih dari 0'); document.getElementById('luas').focus(); return false; }
+    if (!getRadioJenis()) { showToast('error', 'Jenis Lapak wajib dipilih'); var g = document.getElementById('jenisLapakGroup'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return false; }
+    return true;
 }
 
 /* ═══ STALL ═══ */
-function selectStall(el, k, a) {
-    document.querySelectorAll('.stall-item').forEach(s => s.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedStall = { kios: k, amount: a };
-    document.getElementById('btnToPayment').disabled = false;
-}
-
 /* ═══ PAYMENT ═══ */
 function populatePayment() {
+    var nominal = hitungRetribusi();
+    if (!selectedStall) selectedStall = { kios: (document.getElementById('nomorLapak').value || '—'), amount: nominal };
+    else selectedStall.amount = nominal;
+    var jenisEl = document.getElementById('jenisUsaha');
+    var jenisTxt = jenisEl && jenisEl.selectedOptions[0] ? jenisEl.selectedOptions[0].text : 'Retribusi Lapak';
+    var perEl = document.getElementById('periode');
+    var perTxt = perEl && perEl.selectedOptions[0] ? perEl.selectedOptions[0].text : 'Bulanan';
     document.getElementById('payNama').textContent = document.getElementById('namaLengkap').value;
-    document.getElementById('payKios').textContent = selectedStall ? 'Kios ' + selectedStall.kios : '—';
-    document.getElementById('payAmount').textContent = selectedStall ? formatRupiah(selectedStall.amount) : '—';
-    document.getElementById('payTotal').textContent = selectedStall ? formatRupiah(selectedStall.amount + adminFee) : '—';
+    document.getElementById('payKios').textContent = (getRadioJenis() || '—') + ' ' + (document.getElementById('nomorLapak').value || '');
+    document.querySelector('#step3 .payment-summary .payment-row:nth-child(3) span').textContent = 'Retribusi ' + jenisTxt + ' ' + perTxt;
+    document.getElementById('payPeriode').textContent = perTxt;
+    document.getElementById('payAmount').textContent = formatRupiah(nominal);
+    document.getElementById('payTotal').textContent = formatRupiah(nominal + adminFee);
 }
 
 function selectPayment(el, m) {
@@ -800,7 +1120,6 @@ function selectPayment(el, m) {
     selectedPayment = m;
     document.getElementById('btnBayar').disabled = false;
 }
-
 async function processPayment() {
     const m = document.getElementById('paymentModal');
     m.classList.add('show');
@@ -809,6 +1128,8 @@ async function processPayment() {
     const trxNo = 'ERB-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random()*90000)+10000);
     const pasarEl = document.getElementById('pasar');
     const pasarText = pasarEl.options[pasarEl.selectedIndex]?.text || '';
+    if (!selectedStall) selectedStall = { kios: (document.getElementById('nomorLapak').value || '—'), amount: hitungRetribusi() };
+    selectedStall.amount = hitungRetribusi();
     const total = selectedStall.amount + adminFee;
     const periode = document.getElementById('payPeriode').textContent;
 
@@ -845,13 +1166,53 @@ async function processPayment() {
                 currentTransaction.dokumen[k] = { key: v.key, name: v.name, size: v.size };
             }
         }
+        currentTransaction = currentTransaction || {};
         document.getElementById('step6Subtext').textContent = 'E-karcis dan bukti setor telah diterbitkan (mode demo — dokumen disimpan di Kilat Storage)';
     }
+
+    /* Catat pembayaran ke tab Transaksi di spreadsheet agar tampil di
+       dashboard-nyaman-belanje.html. Tidak menghalangi terbitnya e-karcis:
+       bila gagal, transaksi diantre dan dikirim ulang otomatis. */
+    const jenisOpts = document.getElementById('jenisUsaha');
+    const jenisIdx = jenisOpts ? jenisOpts.selectedIndex : -1;
+    const trxDetail = {
+        no: trxNo,
+        tanggal: now.toISOString(),
+        nik: document.getElementById('nik').value.replace(/\D/g, ''),
+        nama: document.getElementById('namaLengkap').value,
+        pasar: pasarText,
+        kios: selectedStall.kios,
+        lapak: getRadioJenis(),
+        objek: (jenisOpts && jenisOpts.options[jenisIdx]) ? jenisOpts.options[jenisIdx].text : '',
+        periode: periode,
+        retribusi: selectedStall.amount,
+        admin: adminFee,
+        total: total,
+        metode: selectedPayment,
+        status: 'Selesai',
+        /* alias nama untuk cetak E-Karcis (downloadReceipt) */
+        noTransaksi: trxNo,
+        namaPedagang: document.getElementById('namaLengkap').value,
+        jumlahRetribusi: selectedStall.amount,
+        biayaAdmin: adminFee,
+        totalPembayaran: total,
+        metodePembayaran: selectedPayment
+    };
+    currentTransaction = Object.assign(currentTransaction || {}, trxDetail);
+    simpanTransaksi(trxDetail).then(function (tersimpan) {
+        const sub = document.getElementById('step6Subtext');
+        if (tersimpan) {
+            if (sub) sub.textContent = 'E-karcis diterbitkan · pembayaran tercatat di spreadsheet dan tampil di dashboard';
+            beritahuDashboard({ type: 'NYAMAN_BELANJE_TRANSAKSI_UPDATED' });
+        } else {
+            if (sub) sub.textContent = 'E-karcis diterbitkan · pembayaran diantre lokal dan akan dikirim ulang otomatis';
+        }
+    });
 
     setTimeout(() => {
         m.classList.remove('show');
         generateReceipt(trxNo, total, pasarText);
-        goToStep(6);
+        goToStep(4);
         showToast('success', 'Pembayaran berhasil! E-karcis diterbitkan.');
     }, 1500);
 }
@@ -863,7 +1224,7 @@ function generateReceipt(trxNo, total, pasarText) {
     document.getElementById('receiptDate').textContent = d;
     document.getElementById('receiptNama').textContent = document.getElementById('namaLengkap').value;
     document.getElementById('receiptNIK').textContent = document.getElementById('nik').value;
-    document.getElementById('receiptKios').textContent = 'Kios ' + selectedStall.kios;
+    document.getElementById('receiptKios').textContent = (getRadioJenis() || '') + ' ' + (selectedStall ? selectedStall.kios : '—');
     document.getElementById('receiptPasar').textContent = pasarText;
     document.getElementById('receiptPeriode').textContent = document.getElementById('payPeriode').textContent;
     document.getElementById('receiptMethod').textContent = selectedPayment;
@@ -890,38 +1251,23 @@ function resetApp() {
     selectedStall = null;
     selectedPayment = null;
     currentTransaction = null;
-    [{ z: 'uploadKTP', f: 'fileKTP', t: 'Unggah KTP', s: 'JPG, PNG (maks. 2MB)', svg: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>', dt: 'ktp' },
-     { z: 'uploadNIB', f: 'fileNIB', t: 'Unggah NIB', s: 'PDF, JPG (maks. 2MB)', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>', dt: 'nib' },
-     { z: 'uploadSurat', f: 'fileSurat', t: 'Unggah Surat', s: 'PDF (maks. 2MB)', svg: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>', dt: 'surat' }
-    ].forEach(d => {
-        const z = document.getElementById(d.z);
-        z.classList.remove('uploaded', 'uploading');
-        document.getElementById(d.f).value = '';
-        z.querySelector('.upload-text').textContent = d.t;
-        z.querySelector('.upload-subtext').textContent = d.s;
-        z.querySelector('.upload-icon').innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + d.svg + '</svg>';
-    });
-    document.querySelectorAll('.stall-item').forEach(s => s.classList.remove('selected'));
-    document.getElementById('btnToPayment').disabled = true;
-    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
-    document.getElementById('btnBayar').disabled = true;
-    ['vc1', 'vc2', 'vc3'].forEach(z => document.getElementById(z).classList.remove('done'));
-    document.getElementById('rejectBanner').classList.remove('show');
-    document.getElementById('verifySpinner').style.display = 'block';
-    document.getElementById('verifySuccess').style.display = 'none';
-    document.getElementById('verifyReject').style.display = 'none';
-    document.getElementById('step3Btns').style.display = 'none';
-    const p = document.getElementById('verifyPanel');
-    p.querySelector('.verify-title').style.display = '';
-    p.querySelector('.verify-text').style.display = '';
-    p.querySelector('.verify-checks').style.display = '';
     document.getElementById('paymentModalText').textContent = 'Menyimpan transaksi...';
+    /* reset form NIK & buka kunci field */
+    var nikEl = document.getElementById('nik');
+    if (nikEl) nikEl.value = '';
+    setAutoLock(false);
+    ['namaLengkap','telepon','email','alamat','nib','namaUsaha','nomorLapak','luas'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+    var jU = document.getElementById('jenisUsaha'); if (jU) jU.value = '';
+    var pS = document.getElementById('pasar'); if (pS) pS.value = '';
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){ r.checked = false; });
+    selectedStall = null;
+    hitungRetribusi();
+    setHint('', 'Ketik NIK pedagang — Data Diri &amp; Objek Retribusi akan terisi otomatis.');
     document.getElementById('step6Subtext').textContent = firebaseReady
         ? 'E-karcis dan bukti setor telah diterbitkan & disimpan di Firestore'
         : 'E-karcis dan bukti setor telah diterbitkan (mode demo)';
     goToStep(1);
 }
-
 function downloadReceipt() {
     try {
         if (!currentTransaction) {
@@ -945,6 +1291,32 @@ function downloadReceipt() {
         showToast('error', 'Gagal mengunduh E-Karcis: ' + e.message);
     }
 }
+
+/* ═══ BINDING — NIK KEY & KALKULASI ═══ */
+(function bindRetribusi(){
+    var nikEl = document.getElementById('nik');
+    if (nikEl){
+        nikEl.addEventListener('input', function(){
+            var pos = nikEl.selectionStart;
+            var digits = nikEl.value.replace(/\D/g, '').slice(0, 16);
+            if (digits !== nikEl.value){ nikEl.value = digits; try { nikEl.setSelectionRange(Math.max(pos-1,0), Math.max(pos-1,0)); } catch(e){} }
+            if (digits.length === 16){ setHint('', 'Memeriksa NIK… (' + digits.length + '/16)'); clearTimeout(_nikTimer); _nikTimer = setTimeout(cariNIK, 450); }
+            else if (digits.length === 0){ setHint('', 'Ketik NIK pedagang — Data Diri &amp; Objek Retribusi akan terisi otomatis.'); clearTimeout(_nikTimer); setAutoLock(false); }
+            else { setHint('', 'NIK belum lengkap (' + digits.length + '/16 digit).'); clearTimeout(_nikTimer); setAutoLock(false); }
+        });
+        nikEl.addEventListener('blur', function(){
+            if (nikEl.value.replace(/\D/g, '').length === 16) cariNIK();
+        });
+    }
+    ['luas', 'tarif'].forEach(function(id){ var e = document.getElementById(id); if (e) e.addEventListener('input', hitungRetribusi); });
+    var per = document.getElementById('periode'); if (per) per.addEventListener('change', hitungRetribusi);
+    document.querySelectorAll('input[name="jenisLapak"]').forEach(function(r){ r.addEventListener('change', hitungRetribusi); });
+    /* inisialisasi */
+    if (document.getElementById('nominalTagihan')) hitungRetribusi();
+    setHint('', 'Ketik NIK pedagang — Data Diri &amp; Objek Retribusi akan terisi otomatis.');
+})();
 </script>
 </body>
 </html>
+
+
